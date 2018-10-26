@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="UTF-8"> 
+<html>
+  <button onclick="go()">Go</button>
+  <script src="https://tonejs.github.io/build/Tone.min.js"></script>
+  <script>
+    var generator;
+    var synth;
+
+    var Module = {
+      onRuntimeInitialized: function() {
+        console.log('Testing');
+
+        generator = new Module.StructuredGenerator();
+
+        synth = new Tone.Synth().toMaster()
+        synth.triggerAttackRelease('C4', '8n')
+      }
+    };
+
+    function go()
+    {
+      console.log("Go");
+
+      var stream = generator.getNext(3);
+
+      while(stream.hasNext())
+      {
+        console.log(stream.getNext().getRaw());
+      }
+
+      if (true)
+      {
+        synth.triggerAttackRelease('G4', '8n');
+      }
+      else
+      {
+        synth.triggerAttackRelease('C4', '8n');
+      }
+    }
+
+  </script>
+  <script src="bin/MusAI.js"></script>
+</html>

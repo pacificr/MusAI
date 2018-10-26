@@ -1,0 +1,22 @@
+#include "../include/MIDISignal.h"
+#include "../include/StructuredGenerator.h"
+#include <emscripten/bind.h>
+
+EMSCRIPTEN_BINDINGS(music_library)
+{
+    emscripten::class_<MIDISignal>("MIDISignal")
+        .constructor()
+        .function("getRaw", &MIDISignal::getRaw)
+    ;
+
+    emscripten::class_<MIDIStream>("MIDIStream")
+        .constructor()
+        .function("hasNext", &MIDIStream::hasNext)
+        .function("getNext", &MIDIStream::getNext)
+    ;
+
+    emscripten::class_<StructuredGenerator>("StructuredGenerator")
+        .constructor()
+        .function("getNext", &StructuredGenerator::getNext)
+    ;
+}
