@@ -12,6 +12,6 @@ public:
     int mDurationSubdivision;
     //int velocity;
 
-    MIDISignal getNoteOn(long time, int tonic);
-    MIDISignal getNoteOff(long time, int tonic);
+    MIDISignal getNoteOn(long time, int tonic) const;
+    MIDISignal getNoteOff(long time, int tonic) const;
 };

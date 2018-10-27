@@ -36,7 +36,14 @@
         "cinttypes": "cpp",
         "tuple": "cpp",
         "utility": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "cstddef": "cpp",
+        "ctime": "cpp",
+        "deque": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "C_Cpp.errorSquiggles": "Enabled",

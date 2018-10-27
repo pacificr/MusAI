@@ -1,22 +1,35 @@
-# Declaration of variables
+.PHONY: clean cpp js
+
 CC = g++
-#CC = ~/Documents/emsdk/emscripten/1.38.12/emcc --bind
+EM_CC = emcc --bind
 CC_FLAGS = -g -Wall
- 
-# File names
+
+
 EXEC = bin/MusAI
-#EXEC = bin/MusAI.js
+EM_EXEC = js/MusAI.js
+
 SOURCES = $(wildcard src/*.cpp)
+
 OBJECTS = $(SOURCES:src/%.cpp=bin/%.o)
- 
-# Main target
+OBJECTS := $(filter-out bin/EmscriptenBindings.o, $(OBJECTS))
+
+EM_OBJECTS = $(SOURCES:src/%.cpp=js/%.o)
+EM_OBJECTS := $(filter-out js/Driver.o, $(EM_OBJECTS))
+
+cpp: $(EXEC)
+js: $(EM_EXEC)
+
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)
- 
-# To obtain object files
+
+$(EM_EXEC): $(EM_OBJECTS)
+	$(EM_CC) $(EM_OBJECTS) -o $(EM_EXEC)
+
 bin/%.o: src/%.cpp
 	$(CC) -c $(CC_FLAGS) $< -o $@
- 
-# To remove generated files
+
+js/%.o: src/%.cpp
+	$(EM_CC) -c $(CC_FLAGS) $< -o $@
+
 clean:
-	rm -f bin/*
+	rm -f bin/* js/*

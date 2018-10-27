@@ -11,10 +11,15 @@
       onRuntimeInitialized: function() {
         console.log('Testing');
 
-        generator = new Module.StructuredGenerator();
+        var re = new Module.RuleEnvironment();
+        var test = new Module.TestRule(re);
+        var sc = new Module.StructureControl(re, test);
+        generator = new Module.StructuredGenerator(sc);
 
         synth = new Tone.Synth().toMaster()
         synth.triggerAttackRelease('C4', '8n')
+
+        console.log('Ok');
       }
     };
 
@@ -40,5 +45,5 @@
     }
 
   </script>
-  <script src="bin/MusAI.js"></script>
+  <script src="js/MusAI.js"></script>
 </html>

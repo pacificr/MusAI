@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IRule.h"
-#include <string>
+#include "INoteProducer.h"
 
-class TestRule : IRule
+class TestRule : public INoteProducer
 {
 public:
-  std::string content;
+  TestRule(const RuleEnvironment& re) : INoteProducer(re){};
+  virtual std::vector<Note> getNotes();
 };

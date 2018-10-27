@@ -1,6 +1,6 @@
 #include "../include/Note.h"
 
-MIDISignal Note::getNoteOn(long time, int tonic)
+MIDISignal Note::getNoteOn(long time, int tonic) const
 {
     MIDISignal signal;
     signal.mNoteOn = true;
@@ -10,7 +10,7 @@ MIDISignal Note::getNoteOn(long time, int tonic)
     return signal;
 }
 
-MIDISignal Note::getNoteOff(long time, int tonic)
+MIDISignal Note::getNoteOff(long time, int tonic) const
 {
     MIDISignal signal;
     signal.mKey = tonic + mPitch;

@@ -1,11 +1,15 @@
 #include "../include/RuleEnvironment.h"
 
-void RuleEnvironment::add(std::string fulfills, std::shared_ptr<IRule> rule)
+#include "../include/IRule.h"
+
+#include <string>
+
+void RuleEnvironment::add(std::string fulfills, const IRule& rule)
 {
-  mRules.insert(std::pair<std::string, std::shared_ptr<IRule>>(fulfills, rule));
+  mRules.insert(std::pair<std::string, std::shared_ptr<IRule>>(fulfills, std::make_shared<IRule>(rule)));
 }
 
-std::shared_ptr<IRule> RuleEnvironment::get(std::string requires)
+IRule& RuleEnvironment::get(std::string requires)
 {
   if (mRules.count(requires) > 0)
   {
@@ -18,8 +22,9 @@ std::shared_ptr<IRule> RuleEnvironment::get(std::string requires)
       ++rules;
     }
 
-    return rules->second;
+    return *rules->second;
   }
 
-  return NULL;
+  //Get default instead
+  return *mRules.find(requires)->second;
 }
