@@ -4,9 +4,9 @@
 
 #include <string>
 
-void RuleEnvironment::add(std::string fulfills, const IRule& rule)
+void RuleEnvironment::add(std::string fulfills, IRule& rule)
 {
-  mRules.insert(std::pair<std::string, std::shared_ptr<IRule>>(fulfills, std::make_shared<IRule>(rule)));
+  mRules.insert(std::pair<std::string, IRule*>(fulfills, &rule));
 }
 
 IRule& RuleEnvironment::get(std::string requires)

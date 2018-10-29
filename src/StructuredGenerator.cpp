@@ -2,21 +2,36 @@
 
 #include "../include/INoteProducer.h"
 
-StructuredGenerator::StructuredGenerator(const StructureControl& structureControl)
+StructuredGenerator::StructuredGenerator(StructureControl& structureControl)
 {
-    mStructureControl = std::make_shared<StructureControl>(structureControl);
+    mStructureControl = &structureControl;
 }
 
-MIDIStream StructuredGenerator::getNext(int time)
+MIDIStream StructuredGenerator::getNext(double time)
 {
-    INoteProducer& noteProducer = mStructureControl->getNoteProducer();
-
     MIDIStream signals;
 
-    for(Note note : noteProducer.getNotes())
+    while (time > mStructureStart + mTimeElapsed)
     {
-        signals.add(note.getNoteOn(4, 45));
-        signals.add(note.getNoteOff(4, 45));
+        INoteProducer& noteProducer = mStructureControl->getNoteProducer();
+
+        for(Note note : noteProducer.getNotes())
+        {
+            if (note.occursBetween(mTimeElapsed, time - mStructureStart))
+            {
+                signals.add(note.getNoteOn(mStructureStart, 45));
+                signals.add(note.getNoteOff(mStructureStart, 45));
+            }
+        }
+
+        mTimeElapsed = time - mStructureStart;
+
+        if (time - mStructureStart > 4)//Length of structure
+        {
+            mTimeElapsed = 0;
+            mStructureStart += 4;
+            mStructureControl = &mStructureControl->getNext();
+        }
     }
 
     return signals;

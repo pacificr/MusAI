@@ -6,7 +6,7 @@ StructureControl::StructureControl(const RuleEnvironment& ruleEnironment, INoteP
   mControlID = "temp";//Generate random ID
 }
 
-void StructureControl::addControl(const StructureControl& structureControl)
+void StructureControl::addControl(StructureControl& structureControl)
 {
   mRuleEnvironment->add(mControlID, structureControl);
 }

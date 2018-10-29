@@ -9,7 +9,7 @@ public:
     int mChannel = 0;
     int mKey = 0;
     int mVelocity = 0;
-    long mTime = 0;
+    double mTime = 0;
 
     std::string getRaw();
 };

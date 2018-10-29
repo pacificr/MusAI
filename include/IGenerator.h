@@ -5,5 +5,5 @@
 class IGenerator
 {
 public:
-    virtual MIDIStream getNext(int time) = 0;
+    virtual MIDIStream getNext(double time) = 0;
 };

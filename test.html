@@ -2,6 +2,7 @@
 <meta charset="UTF-8"> 
 <html>
   <button onclick="go()">Go</button>
+  <p id="test"></p>
   <script src="https://tonejs.github.io/build/Tone.min.js"></script>
   <script>
     var generator;
@@ -14,6 +15,7 @@
         var re = new Module.RuleEnvironment();
         var test = new Module.TestRule(re);
         var sc = new Module.StructureControl(re, test);
+        sc.addControl(sc);
         generator = new Module.StructuredGenerator(sc);
 
         synth = new Tone.Synth().toMaster()
@@ -27,7 +29,8 @@
     {
       console.log("Go");
 
-      var stream = generator.getNext(3);
+      document.getElementById("test").innerHTML = Tone.now();
+      var stream = generator.getNext(Tone.now());
 
       while(stream.hasNext())
       {

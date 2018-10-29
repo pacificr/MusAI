@@ -13,7 +13,7 @@ private:
 public:
   StructureControl(const RuleEnvironment&, INoteProducer&);
 
-  void addControl(const StructureControl&);
+  void addControl(StructureControl&);
 
   INoteProducer& getNoteProducer() const;
   StructureControl& getNext() const;

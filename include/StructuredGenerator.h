@@ -7,8 +7,11 @@
 class StructuredGenerator : IGenerator
 {
 private:
-    std::shared_ptr<StructureControl> mStructureControl;
+    StructureControl* mStructureControl;
+    double mStructureStart = 0;
+    double mTimeElapsed = 0;
 public:
-    StructuredGenerator(const StructureControl&);
-    MIDIStream getNext(int time);
+    StructuredGenerator(StructureControl&);
+    MIDIStream getNext(double time);
+    //MIDIStream getNext(int beats);
 };

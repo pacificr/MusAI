@@ -32,5 +32,6 @@ EMSCRIPTEN_BINDINGS(music_library)
 
     emscripten::class_<StructureControl>("StructureControl")
         .constructor<RuleEnvironment&, INoteProducer&>()
+        .function("addControl", &StructureControl::addControl)
     ;
 }

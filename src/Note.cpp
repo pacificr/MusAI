@@ -1,6 +1,6 @@
 #include "../include/Note.h"
 
-MIDISignal Note::getNoteOn(long time, int tonic) const
+MIDISignal Note::getNoteOn(double time, int tonic) const
 {
     MIDISignal signal;
     signal.mNoteOn = true;
@@ -10,10 +10,15 @@ MIDISignal Note::getNoteOn(long time, int tonic) const
     return signal;
 }
 
-MIDISignal Note::getNoteOff(long time, int tonic) const
+MIDISignal Note::getNoteOff(double time, int tonic) const
 {
     MIDISignal signal;
     signal.mKey = tonic + mPitch;
     signal.mTime = time + mBeat + mDurationBeat;
     return signal;
+}
+
+bool Note::occursBetween(double start, double end) const
+{
+    return start <= mBeat && mBeat < end;
 }

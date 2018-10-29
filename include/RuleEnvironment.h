@@ -9,8 +9,8 @@ class IRule;
 class RuleEnvironment
 {
 private:
-  std::multimap<std::string, std::shared_ptr<IRule>> mRules;
+  std::multimap<std::string, IRule*> mRules;
 public:
-  void add(std::string, const IRule&);
+  void add(std::string, IRule&);
   IRule& get(std::string);
 };
