@@ -12,11 +12,18 @@
       onRuntimeInitialized: function() {
         console.log('Testing');
 
-        var re = new Module.RuleEnvironment();
-        var test = new Module.TestRule(re);
-        var sc = new Module.StructureControl(re, test);
-        sc.addControl(sc);
-        generator = new Module.StructuredGenerator(sc);
+        var theme = new Module.Theme();
+        console.log("ok at aaaa");
+        var test = new Module.TestRule();
+        console.log("ok at aaaa");
+        var p = new Module.StructuredGeneratorProducer();
+        console.log("ok at aaaa");
+        theme.addRule(p);
+        console.log("ok at aaaa");
+        theme.addRule(test);
+        console.log("ok at aaaa");
+        generator = theme.getGenerator();
+        console.log("ok at least");
 
         synth = new Tone.Synth().toMaster()
         synth.triggerAttackRelease('C4', '8n')

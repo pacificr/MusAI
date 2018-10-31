@@ -11,10 +11,12 @@ private:
   std::string mControlID;
   INoteProducer* mNoteProducer;
 public:
-  StructureControl(const RuleEnvironment&, INoteProducer&);
+  StructureControl(INoteProducer*);
 
-  void addControl(StructureControl&);
+  virtual void describe(RuleEnvironment&){};
+
+  void addControl(StructureControl*, RuleEnvironment&);
 
   INoteProducer& getNoteProducer() const;
-  StructureControl& getNext() const;
+  StructureControl& getNext(RuleEnvironment&) const;
 };

@@ -1,17 +1,20 @@
 #pragma once
 
+#include "RuleEnvironment.h"
 #include "IGenerator.h"
 #include "StructureControl.h"
 #include "Note.h"
 
-class StructuredGenerator : IGenerator
+class StructuredGenerator : public IGenerator
 {
 private:
-    StructureControl* mStructureControl;
-    double mStructureStart = 0;
-    double mTimeElapsed = 0;
+  RuleEnvironment* mRuleEnvironment;
+  StructureControl* mStructureControl;
+  double mStructureStart = 0;
+  double mTimeElapsed = 0;
 public:
-    StructuredGenerator(StructureControl&);
-    MIDIStream getNext(double time);
-    //MIDIStream getNext(int beats);
+  StructuredGenerator(RuleEnvironment*, StructureControl*);
+  virtual ~StructuredGenerator();
+  MIDIStream getNext(double time);
+  //MIDIStream getNext(int beats);
 };

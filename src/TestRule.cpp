@@ -1,5 +1,10 @@
 #include "../include/TestRule.h"
 
+void TestRule::describe(RuleEnvironment& ruleEnvironment)
+{
+  ruleEnvironment.addRule("Test", this);
+}
+
 std::vector<Note> TestRule::getNotes()
 {
   std::vector<Note> ret;

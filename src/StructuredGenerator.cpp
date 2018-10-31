@@ -2,37 +2,43 @@
 
 #include "../include/INoteProducer.h"
 
-StructuredGenerator::StructuredGenerator(StructureControl& structureControl)
+StructuredGenerator::StructuredGenerator(RuleEnvironment* ruleEnvironment, StructureControl* structureControl)
 {
-    mStructureControl = &structureControl;
+  mRuleEnvironment = ruleEnvironment;
+  mStructureControl = structureControl;
+}
+
+StructuredGenerator::~StructuredGenerator()
+{
+  delete mStructureControl;
 }
 
 MIDIStream StructuredGenerator::getNext(double time)
 {
-    MIDIStream signals;
+  MIDIStream signals;
 
-    while (time > mStructureStart + mTimeElapsed)
+  while (time > mStructureStart + mTimeElapsed)
+  {
+    INoteProducer& noteProducer = mStructureControl->getNoteProducer();
+
+    for(Note note : noteProducer.getNotes())
     {
-        INoteProducer& noteProducer = mStructureControl->getNoteProducer();
-
-        for(Note note : noteProducer.getNotes())
-        {
-            if (note.occursBetween(mTimeElapsed, time - mStructureStart))
-            {
-                signals.add(note.getNoteOn(mStructureStart, 45));
-                signals.add(note.getNoteOff(mStructureStart, 45));
-            }
-        }
-
-        mTimeElapsed = time - mStructureStart;
-
-        if (time - mStructureStart > 4)//Length of structure
-        {
-            mTimeElapsed = 0;
-            mStructureStart += 4;
-            mStructureControl = &mStructureControl->getNext();
-        }
+      if (note.occursBetween(mTimeElapsed, time - mStructureStart))
+      {
+        signals.add(note.getNoteOn(mStructureStart, 45));
+        signals.add(note.getNoteOff(mStructureStart, 45));
+      }
     }
 
-    return signals;
+    mTimeElapsed = time - mStructureStart;
+
+    if (time - mStructureStart > 4)//Length of structure
+    {
+      mTimeElapsed = 0;
+      mStructureStart += 4;
+      mStructureControl = &mStructureControl->getNext(*mRuleEnvironment);
+    }
+  }
+
+  return signals;
 }

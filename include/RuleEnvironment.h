@@ -11,6 +11,6 @@ class RuleEnvironment
 private:
   std::multimap<std::string, IRule*> mRules;
 public:
-  void add(std::string, IRule&);
-  IRule& get(std::string);
+  void addRule(std::string, IRule*);
+  IRule& getRule(std::string);
 };

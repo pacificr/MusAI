@@ -5,6 +5,6 @@
 class TestRule : public INoteProducer
 {
 public:
-  TestRule(const RuleEnvironment& re) : INoteProducer(re){};
+  virtual void describe(RuleEnvironment&);
   virtual std::vector<Note> getNotes();
 };

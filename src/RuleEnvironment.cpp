@@ -3,13 +3,14 @@
 #include "../include/IRule.h"
 
 #include <string>
+#include <iostream>
 
-void RuleEnvironment::add(std::string fulfills, IRule& rule)
+void RuleEnvironment::addRule(std::string fulfills, IRule* rule)
 {
-  mRules.insert(std::pair<std::string, IRule*>(fulfills, &rule));
+  mRules.insert(std::pair<std::string, IRule*>(fulfills, rule));
 }
 
-IRule& RuleEnvironment::get(std::string requires)
+IRule& RuleEnvironment::getRule(std::string requires)
 {
   if (mRules.count(requires) > 0)
   {
@@ -24,7 +25,7 @@ IRule& RuleEnvironment::get(std::string requires)
 
     return *rules->second;
   }
-
+  std::cout << "NO RULE FOUND FOR: " << requires << std::endl;
   //Get default instead
   return *mRules.find(requires)->second;
 }

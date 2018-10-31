@@ -8,6 +8,6 @@
 class INoteProducer : public IRule
 {
 public:
-    INoteProducer(const RuleEnvironment& re) : IRule(re){};
-    virtual std::vector<Note> getNotes() = 0;
+  virtual ~INoteProducer() = default;
+  virtual std::vector<Note> getNotes() = 0;
 };
