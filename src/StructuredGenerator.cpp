@@ -1,6 +1,6 @@
 #include "../include/StructuredGenerator.h"
 
-#include "../include/INoteProducer.h"
+#include "../include/INoteRule.h"
 
 StructuredGenerator::StructuredGenerator(RuleEnvironment* ruleEnvironment, StructureControl* structureControl)
 {
@@ -19,9 +19,9 @@ MIDIStream StructuredGenerator::getNext(double time)
 
   while (time > mStructureStart + mTimeElapsed)
   {
-    INoteProducer& noteProducer = mStructureControl->getNoteProducer();
+    INoteRule& noteRule = mStructureControl->getNoteRule();
 
-    for(Note note : noteProducer.getNotes())
+    for(Note note : noteRule.getNotes())
     {
       if (note.occursBetween(mTimeElapsed, time - mStructureStart))
       {

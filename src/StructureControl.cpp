@@ -1,8 +1,8 @@
 #include "../include/StructureControl.h"
 
-StructureControl::StructureControl(INoteProducer* structure)
+StructureControl::StructureControl(INoteRule* structure)
 {
-  mNoteProducer = structure;
+  mNoteRule = structure;
   mControlID = "temp";//Generate random ID
 }
 
@@ -11,9 +11,9 @@ void StructureControl::addControl(StructureControl* structureControl, RuleEnviro
   ruleEnvironment.addRule(mControlID, structureControl);
 }
 
-INoteProducer& StructureControl::getNoteProducer() const
+INoteRule& StructureControl::getNoteRule() const
 {
-  return *mNoteProducer;
+  return *mNoteRule;
 }
 
 StructureControl& StructureControl::getNext(RuleEnvironment& ruleEnvironment) const

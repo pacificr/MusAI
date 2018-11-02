@@ -14,7 +14,7 @@ private:
   double mTimeElapsed = 0;
 public:
   StructuredGenerator(RuleEnvironment*, StructureControl*);
-  virtual ~StructuredGenerator();
+  ~StructuredGenerator();
   MIDIStream getNext(double time);
   //MIDIStream getNext(int beats);
 };

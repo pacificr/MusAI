@@ -3,7 +3,7 @@
 #include "IRule.h"
 #include "IGenerator.h"
 
-class IGeneratorProducer : public IRule
+class IGeneratorRule : public IRule
 {
 public:
   virtual IGenerator* getGenerator(RuleEnvironment*) = 0;

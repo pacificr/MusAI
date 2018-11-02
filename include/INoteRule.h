@@ -5,9 +5,9 @@
 
 #include <vector>
 
-class INoteProducer : public IRule
+class INoteRule : public IRule
 {
 public:
-  virtual ~INoteProducer() = default;
+  virtual ~INoteRule() = default;
   virtual std::vector<Note> getNotes() = 0;
 };

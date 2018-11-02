@@ -1,6 +1,6 @@
 #pragma once
 
-#include "INoteProducer.h"
+#include "INoteRule.h"
 
 #include <memory>
 #include <vector>
@@ -9,14 +9,14 @@ class StructureControl : public IRule
 {
 private:
   std::string mControlID;
-  INoteProducer* mNoteProducer;
+  INoteRule* mNoteRule;
 public:
-  StructureControl(INoteProducer*);
+  StructureControl(INoteRule*);
 
   virtual void describe(RuleEnvironment&){};
 
   void addControl(StructureControl*, RuleEnvironment&);
 
-  INoteProducer& getNoteProducer() const;
+  INoteRule& getNoteRule() const;
   StructureControl& getNext(RuleEnvironment&) const;
 };

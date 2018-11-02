@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IGeneratorProducer.h"
+#include "IGeneratorRule.h"
 
-class StructuredGeneratorProducer : public IGeneratorProducer
+class StructuredGeneratorRule : public IGeneratorRule
 {
 public:
   virtual void describe(RuleEnvironment&);

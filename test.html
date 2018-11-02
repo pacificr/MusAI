@@ -13,17 +13,11 @@
         console.log('Testing');
 
         var theme = new Module.Theme();
-        console.log("ok at aaaa");
         var test = new Module.TestRule();
-        console.log("ok at aaaa");
-        var p = new Module.StructuredGeneratorProducer();
-        console.log("ok at aaaa");
+        var p = new Module.StructuredGeneratorRule();
         theme.addRule(p);
-        console.log("ok at aaaa");
         theme.addRule(test);
-        console.log("ok at aaaa");
         generator = theme.getGenerator();
-        console.log("ok at least");
 
         synth = new Tone.Synth().toMaster()
         synth.triggerAttackRelease('C4', '8n')

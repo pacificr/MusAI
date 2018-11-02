@@ -1,6 +1,6 @@
 #include "../include/TestRule.h"
 #include "../include/Theme.h"
-#include "../include/StructuredGeneratorProducer.h"
+#include "../include/StructuredGeneratorRule.h"
 
 #include <iostream>
 #include <memory>
@@ -11,7 +11,7 @@ int main()
 
   Theme theme;
   TestRule test;
-  StructuredGeneratorProducer p;
+  StructuredGeneratorRule p;
   theme.addRule(p);
   theme.addRule(test);
   IGenerator* generator = theme.getGenerator();

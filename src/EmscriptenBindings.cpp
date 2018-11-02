@@ -1,5 +1,5 @@
 #include "../include/MIDISignal.h"
-#include "../include/StructuredGeneratorProducer.h"
+#include "../include/StructuredGeneratorRule.h"
 #include "../include/TestRule.h"
 #include "../include/Theme.h"
 #include <emscripten/bind.h>
@@ -22,15 +22,15 @@ EMSCRIPTEN_BINDINGS(music_library)
 
     emscripten::class_<IRule>("IRule");
 
-    emscripten::class_<INoteProducer, emscripten::base<IRule>>("INoteProducer");
+    emscripten::class_<INoteRule, emscripten::base<IRule>>("INoteRule");
 
-    emscripten::class_<TestRule, emscripten::base<INoteProducer>>("TestRule")
+    emscripten::class_<TestRule, emscripten::base<INoteRule>>("TestRule")
         .constructor()
     ;
 
-    emscripten::class_<IGeneratorProducer, emscripten::base<IRule>>("IGeneratorProducer");
+    emscripten::class_<IGeneratorRule, emscripten::base<IRule>>("IGeneratorRule");
 
-    emscripten::class_<StructuredGeneratorProducer, emscripten::base<IGeneratorProducer>>("StructuredGeneratorProducer")
+    emscripten::class_<StructuredGeneratorRule, emscripten::base<IGeneratorRule>>("StructuredGeneratorRule")
         .constructor()
     ;
 

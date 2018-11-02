@@ -1,8 +1,8 @@
 #pragma once
 
-#include "INoteProducer.h"
+#include "INoteRule.h"
 
-class TestRule : public INoteProducer
+class TestRule : public INoteRule
 {
 public:
   virtual void describe(RuleEnvironment&);
