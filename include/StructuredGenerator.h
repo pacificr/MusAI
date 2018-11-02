@@ -3,7 +3,6 @@
 #include "RuleEnvironment.h"
 #include "IGenerator.h"
 #include "StructureControl.h"
-#include "Note.h"
 
 class StructuredGenerator : public IGenerator
 {

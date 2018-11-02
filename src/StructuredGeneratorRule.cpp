@@ -1,6 +1,7 @@
 #include "../include/StructuredGeneratorRule.h"
 
 #include "../include/StructuredGenerator.h"
+#include "../include/IAbsoluteNoteRule.h"
 
 void StructuredGeneratorRule::describe(RuleEnvironment& ruleEnvironment)
 {
@@ -9,7 +10,7 @@ void StructuredGeneratorRule::describe(RuleEnvironment& ruleEnvironment)
 
 IGenerator* StructuredGeneratorRule::getGenerator(RuleEnvironment* ruleEnvironment)
 {
-  INoteRule* noteRule = (INoteRule*)&ruleEnvironment->getRule("Test");
+  IAbsoluteNoteRule* noteRule = (IAbsoluteNoteRule*)ruleEnvironment->getRule("TestA");
 
   StructureControl* control = new StructureControl(noteRule);
   control->addControl(control, *ruleEnvironment);

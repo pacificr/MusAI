@@ -1,6 +1,7 @@
 #include "../include/TestRule.h"
 #include "../include/Theme.h"
 #include "../include/StructuredGeneratorRule.h"
+#include "../include/BasicAbsoluteNoteRule.h"
 
 #include <iostream>
 #include <memory>
@@ -11,9 +12,11 @@ int main()
 
   Theme theme;
   TestRule test;
+  BasicAbsoluteNoteRule nr;
   StructuredGeneratorRule p;
   theme.addRule(p);
   theme.addRule(test);
+  theme.addRule(nr);
   IGenerator* generator = theme.getGenerator();
 
   MIDIStream stream = generator->getNext(0.5);

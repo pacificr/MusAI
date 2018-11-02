@@ -12,5 +12,5 @@ private:
   std::multimap<std::string, IRule*> mRules;
 public:
   void addRule(std::string, IRule*);
-  IRule& getRule(std::string);
+  IRule* getRule(std::string);
 };

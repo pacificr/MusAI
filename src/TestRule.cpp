@@ -5,12 +5,12 @@ void TestRule::describe(RuleEnvironment& ruleEnvironment)
   ruleEnvironment.addRule("Test", this);
 }
 
-std::vector<Note> TestRule::getNotes()
+std::vector<RelativeNote> TestRule::getRelativeNotes()
 {
-  std::vector<Note> ret;
+  std::vector<RelativeNote> ret;
 
-  Note a;
-  Note b;
+  RelativeNote a;
+  RelativeNote b;
   a.mPitch = 2;
   a.mBeat = 0;
   a.mDurationBeat = 1;

@@ -1,6 +1,6 @@
 #include "../include/StructureControl.h"
 
-StructureControl::StructureControl(INoteRule* structure)
+StructureControl::StructureControl(IAbsoluteNoteRule* structure)
 {
   mNoteRule = structure;
   mControlID = "temp";//Generate random ID
@@ -11,12 +11,12 @@ void StructureControl::addControl(StructureControl* structureControl, RuleEnviro
   ruleEnvironment.addRule(mControlID, structureControl);
 }
 
-INoteRule& StructureControl::getNoteRule() const
+IAbsoluteNoteRule& StructureControl::getNoteRule() const
 {
   return *mNoteRule;
 }
 
 StructureControl& StructureControl::getNext(RuleEnvironment& ruleEnvironment) const
 {
-  return (StructureControl&)ruleEnvironment.getRule(mControlID);
+  return (StructureControl&)*ruleEnvironment.getRule(mControlID);
 }

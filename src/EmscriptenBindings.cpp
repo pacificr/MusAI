@@ -1,6 +1,7 @@
 #include "../include/MIDISignal.h"
 #include "../include/StructuredGeneratorRule.h"
 #include "../include/TestRule.h"
+#include "../include/BasicAbsoluteNoteRule.h"
 #include "../include/Theme.h"
 #include <emscripten/bind.h>
 
@@ -22,9 +23,15 @@ EMSCRIPTEN_BINDINGS(music_library)
 
     emscripten::class_<IRule>("IRule");
 
-    emscripten::class_<INoteRule, emscripten::base<IRule>>("INoteRule");
+    emscripten::class_<IRelativeNoteRule, emscripten::base<IRule>>("IRelativeNoteRule");
 
-    emscripten::class_<TestRule, emscripten::base<INoteRule>>("TestRule")
+    emscripten::class_<TestRule, emscripten::base<IRelativeNoteRule>>("TestRule")
+        .constructor()
+    ;
+
+    emscripten::class_<IAbsoluteNoteRule, emscripten::base<IRule>>("IAbsoluteNoteRule");
+
+    emscripten::class_<BasicAbsoluteNoteRule, emscripten::base<IAbsoluteNoteRule>>("BasicAbsoluteNoteRule")
         .constructor()
     ;
 

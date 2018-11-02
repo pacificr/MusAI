@@ -15,8 +15,10 @@
         var theme = new Module.Theme();
         var test = new Module.TestRule();
         var p = new Module.StructuredGeneratorRule();
+        var nr = new Module.BasicAbsoluteNoteRule();
         theme.addRule(p);
         theme.addRule(test);
+        theme.addRule(nr);
         generator = theme.getGenerator();
 
         synth = new Tone.Synth().toMaster()

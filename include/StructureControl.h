@@ -1,6 +1,6 @@
 #pragma once
 
-#include "INoteRule.h"
+#include "IAbsoluteNoteRule.h"
 
 #include <memory>
 #include <vector>
@@ -9,14 +9,14 @@ class StructureControl : public IRule
 {
 private:
   std::string mControlID;
-  INoteRule* mNoteRule;
+  IAbsoluteNoteRule* mNoteRule;
 public:
-  StructureControl(INoteRule*);
+  StructureControl(IAbsoluteNoteRule*);
 
   virtual void describe(RuleEnvironment&){};
 
   void addControl(StructureControl*, RuleEnvironment&);
 
-  INoteRule& getNoteRule() const;
+  IAbsoluteNoteRule& getNoteRule() const;
   StructureControl& getNext(RuleEnvironment&) const;
 };

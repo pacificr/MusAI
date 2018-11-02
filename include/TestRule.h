@@ -1,10 +1,10 @@
 #pragma once
 
-#include "INoteRule.h"
+#include "IRelativeNoteRule.h"
 
-class TestRule : public INoteRule
+class TestRule : public IRelativeNoteRule
 {
 public:
-  virtual void describe(RuleEnvironment&);
-  virtual std::vector<Note> getNotes();
+  void describe(RuleEnvironment&);
+  std::vector<RelativeNote> getRelativeNotes();
 };

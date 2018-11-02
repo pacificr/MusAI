@@ -10,7 +10,7 @@ void RuleEnvironment::addRule(std::string fulfills, IRule* rule)
   mRules.insert(std::pair<std::string, IRule*>(fulfills, rule));
 }
 
-IRule& RuleEnvironment::getRule(std::string requires)
+IRule* RuleEnvironment::getRule(std::string requires)
 {
   if (mRules.count(requires) > 0)
   {
@@ -23,9 +23,9 @@ IRule& RuleEnvironment::getRule(std::string requires)
       ++rules;
     }
 
-    return *rules->second;
+    return rules->second;
   }
   std::cout << "NO RULE FOUND FOR: " << requires << std::endl;
   //Get default instead
-  return *mRules.find(requires)->second;
+  return mRules.find(requires)->second;
 }
