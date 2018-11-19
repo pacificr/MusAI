@@ -7,6 +7,12 @@
   <script>
     var generator;
     var synth;
+    var synth2;
+    var g = true;
+
+    var nextUpdate = 0.0;
+    var increment = 1.0;
+    var lookAhead = 1.0;
 
     var Module = {
       onRuntimeInitialized: function() {
@@ -16,37 +22,93 @@
         var test = new Module.TestRule();
         var p = new Module.StructuredGeneratorRule();
         var nr = new Module.BasicAbsoluteNoteRule();
+        var t = new Module.AbsoluteTonicRule(72);
+        var s = new Module.AbsoluteSubdivisionRule(4);
+        var tt = new Module.AbsoluteTempoRule(95);
         theme.addRule(p);
         theme.addRule(test);
         theme.addRule(nr);
+        theme.addRule(t);
+        theme.addRule(s);
+        theme.addRule(tt);
         generator = theme.getGenerator();
 
-        synth = new Tone.Synth().toMaster()
-        synth.triggerAttackRelease('C4', '8n')
+        synth = new Tone.Synth({
+          "oscillator" : {
+            "type" : "amtriangle",
+            "harmonicity" : 0.5,
+            "modulationType" : "sine"
+          },
+          "envelope" : {
+            "attackCurve" : 'exponential',
+            "attack" : 0.05,
+            "decay" : 0.2,
+            "sustain" : 0.2,
+            "release" : 1.5,
+          },
+          "portamento" : 0.05
+        }).toMaster();
 
-        console.log('Ok');
+        synth2 = new Tone.PolySynth(6, Tone.Synth, {
+          "oscillator" : {
+            "partials" : [0, 2, 3, 4],
+          }
+        }).toMaster();
+
+        console.log('Start');
+        updateTime()
       }
     };
 
     function go()
     {
-      console.log("Go");
+      g = false;
+      console.log("Stopping");
+    }
 
-      document.getElementById("test").innerHTML = Tone.now();
-      var stream = generator.getNext(Tone.now());
 
-      while(stream.hasNext())
+    function scheduleNote(note, duration)
+    {
+      synth.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 1);
+      //synth2.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 2);
+      console.log("Scheduling note: " + (note.key) + " d: " + (duration) + " t: " + (note.time) + " ct: " + Tone.now().toFixed(3));
+    }
+
+    function updateTime(){
+      if (g)
       {
-        console.log(stream.getNext().getRaw());
+        requestAnimationFrame(updateTime);
       }
+      document.getElementById("test").innerHTML = Tone.now().toFixed(3);
 
-      if (true)
+      if (Tone.now() >= nextUpdate)
       {
-        synth.triggerAttackRelease('G4', '8n');
-      }
-      else
-      {
-        synth.triggerAttackRelease('C4', '8n');
+        var currentTime = Tone.now();
+        nextUpdate = currentTime + increment;
+        var stream = generator.getNext(nextUpdate + lookAhead);
+        var notes = [];
+
+        while(stream.hasNext())
+        {
+          var note = stream.getNext();
+          console.log(note.getRaw());
+          if (note.isNoteOn)
+          {
+            notes.push(note);
+          }
+          else
+          {
+            for (var i = 0; i < notes.length; ++i)
+            {
+              if (notes[i].key == note.key && notes[i].channel == note.channel)
+              {
+                scheduleNote (notes[i], note.time - notes[i].time);
+                notes.splice(i, 1);
+                break;
+              }
+            }
+          }
+        }
       }
     }
 

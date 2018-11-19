@@ -7,4 +7,5 @@ class BasicAbsoluteNoteRule : public IAbsoluteNoteRule
 public:
   void describe(RuleEnvironment&);
   std::vector<AbsoluteNote> getAbsoluteNotes(RuleEnvironment&);
+  double getLength(RuleEnvironment&);
 };

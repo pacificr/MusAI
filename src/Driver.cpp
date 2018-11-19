@@ -2,6 +2,9 @@
 #include "../include/Theme.h"
 #include "../include/StructuredGeneratorRule.h"
 #include "../include/BasicAbsoluteNoteRule.h"
+#include "../include/AbsoluteTonicRule.h"
+#include "../include/AbsoluteSubdivisionRule.h"
+#include "../include/AbsoluteTempoRule.h"
 
 #include <iostream>
 #include <memory>
@@ -14,9 +17,15 @@ int main()
   TestRule test;
   BasicAbsoluteNoteRule nr;
   StructuredGeneratorRule p;
+  AbsoluteTonicRule t(72);
+  AbsoluteSubdivisionRule s(4);
+  AbsoluteTempoRule tt(120);
   theme.addRule(p);
   theme.addRule(test);
   theme.addRule(nr);
+  theme.addRule(t);
+  theme.addRule(s);
+  theme.addRule(tt);
   IGenerator* generator = theme.getGenerator();
 
   MIDIStream stream = generator->getNext(0.5);

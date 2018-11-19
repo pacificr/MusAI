@@ -32,10 +32,10 @@ MIDIStream StructuredGenerator::getNext(double time)
 
     mTimeElapsed = time - mStructureStart;
 
-    if (time - mStructureStart > 4)//Length of structure
+    if (time - mStructureStart > notes.getLength(*mRuleEnvironment))
     {
       mTimeElapsed = 0;
-      mStructureStart += 4;
+      mStructureStart += notes.getLength(*mRuleEnvironment);
       mStructureControl = &mStructureControl->getNext(*mRuleEnvironment);
     }
   }

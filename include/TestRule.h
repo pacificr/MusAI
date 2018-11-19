@@ -7,4 +7,5 @@ class TestRule : public IRelativeNoteRule
 public:
   void describe(RuleEnvironment&);
   std::vector<RelativeNote> getRelativeNotes();
+  int getLength();
 };
