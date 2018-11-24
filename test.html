@@ -25,35 +25,25 @@
         var t = new Module.AbsoluteTonicRule(72);
         var s = new Module.AbsoluteSubdivisionRule(4);
         var tt = new Module.AbsoluteTempoRule(95);
+        var ss = new Module.BasicScaleRule(Module.SCALE.MAJOR);
+        var vec = new Module.vi();
+        vec.push_back(0);
+        vec.push_back(1);
+        vec.push_back(2);
+        vec.push_back(3);
+        var c = new Module.ScaleChordProgressionRule(vec);
+
         theme.addRule(p);
         theme.addRule(test);
         theme.addRule(nr);
         theme.addRule(t);
         theme.addRule(s);
         theme.addRule(tt);
+        theme.addRule(ss);
+        theme.addRule(c);
         generator = theme.getGenerator();
 
-        synth = new Tone.Synth({
-          "oscillator" : {
-            "type" : "amtriangle",
-            "harmonicity" : 0.5,
-            "modulationType" : "sine"
-          },
-          "envelope" : {
-            "attackCurve" : 'exponential',
-            "attack" : 0.05,
-            "decay" : 0.2,
-            "sustain" : 0.2,
-            "release" : 1.5,
-          },
-          "portamento" : 0.05
-        }).toMaster();
-
-        synth2 = new Tone.PolySynth(6, Tone.Synth, {
-          "oscillator" : {
-            "partials" : [0, 2, 3, 4],
-          }
-        }).toMaster();
+        synth = new Tone.PolySynth(4, Tone.Synth).toMaster();
 
         console.log('Start');
         updateTime()
@@ -66,11 +56,9 @@
       console.log("Stopping");
     }
 
-
     function scheduleNote(note, duration)
     {
       synth.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 1);
-      //synth2.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 2);
       console.log("Scheduling note: " + (note.key) + " d: " + (duration) + " t: " + (note.time) + " ct: " + Tone.now().toFixed(3));
     }
 

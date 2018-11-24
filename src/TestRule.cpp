@@ -1,13 +1,46 @@
 #include "../include/TestRule.h"
 
+#include "../include/IChordProgressionRule.h"
+
 void TestRule::describe(RuleEnvironment& ruleEnvironment)
 {
   ruleEnvironment.addRule("Test", this);
 }
 
-std::vector<RelativeNote> TestRule::getRelativeNotes()
+std::vector<RelativeNote> TestRule::getRelativeNotes(RuleEnvironment& ruleEnvironment)
 {
+  mLength = 4;
   std::vector<RelativeNote> ret;
+
+  IChordProgressionRule* chordProg = (IChordProgressionRule*)ruleEnvironment.getRule("ChordProg");
+
+  int i = 0;
+  for (auto chord : chordProg->getChords(ruleEnvironment))
+  {
+    RelativeNote a;
+    RelativeNote b;
+    RelativeNote c;
+
+    a.mPitch = chord[0];
+    a.mBeat = i;
+    a.mDurationBeat = 1;
+
+    b.mPitch = chord[1];
+    b.mBeat = i;
+    b.mDurationBeat = 1;
+
+    c.mPitch = chord[2];
+    c.mBeat = i;
+    c.mDurationBeat = 1;
+
+    ret.push_back(a);
+    ret.push_back(b);
+    ret.push_back(c);
+
+    ++i;
+  }
+
+  /*
 
   RelativeNote a;
   RelativeNote b;
@@ -66,11 +99,12 @@ std::vector<RelativeNote> TestRule::getRelativeNotes()
   ret.push_back(e);
   ret.push_back(f);
   ret.push_back(g);
+  */
 
   return ret;
 }
 
 int TestRule::getLength()
 {
-  return 4;
+  return mLength;
 }

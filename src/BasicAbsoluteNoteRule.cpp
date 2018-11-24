@@ -19,7 +19,7 @@ std::vector<AbsoluteNote> BasicAbsoluteNoteRule::getAbsoluteNotes(RuleEnvironmen
   ISubdivisionRule* subdivision = (ISubdivisionRule*)ruleEnvironment.getRule("Subdivision");
   ITempoRule* tempo = (ITempoRule*)ruleEnvironment.getRule("Tempo");
 
-  for (RelativeNote note : notes->getRelativeNotes())
+  for (RelativeNote note : notes->getRelativeNotes(ruleEnvironment))
   {
     AbsoluteNote absoluteNote;
     absoluteNote.mTime = tempo->applyTempo(note.mBeat + subdivision->applyTiming(note.mSubdivision));

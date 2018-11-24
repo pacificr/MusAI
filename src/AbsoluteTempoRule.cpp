@@ -12,5 +12,5 @@ void AbsoluteTempoRule::describe(RuleEnvironment& ruleEnvironment)
 
 double AbsoluteTempoRule::applyTempo(double relativeBeat)
 {
-  return 60.0 / mBpm * relativeBeat;
+  return (60.0 / mBpm) * relativeBeat;
 }

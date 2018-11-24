@@ -6,11 +6,27 @@
 #include "../include/AbsoluteSubdivisionRule.h"
 #include "../include/AbsoluteTempoRule.h"
 #include "../include/Theme.h"
+#include "../include/BasicScaleRule.h"
+#include "../include/ScaleChordProgressionRule.h"
 #include <emscripten/bind.h>
+
+using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(music_library)
 {
-    emscripten::class_<MIDISignal>("MIDISignal")
+    enum_<SCALE>("SCALE")
+        .value("MAJOR", SCALE::MAJOR)
+        .value("MINOR", SCALE::MINOR)
+        .value("IONIAN", SCALE::IONIAN)
+        .value("DORIAN", SCALE::DORIAN)
+        .value("PHRYGIAN", SCALE::PHRYGIAN)
+        .value("LYDIAN", SCALE::LYDIAN)
+        .value("MIXOLYDIAN", SCALE::MIXOLYDIAN)
+        .value("AEOLIAN", SCALE::AEOLIAN)
+        .value("LOCRIAN", SCALE::LOCRIAN)
+        ;
+    
+    class_<MIDISignal>("MIDISignal")
         .constructor()
         .function("getRaw", &MIDISignal::getRaw)
         .property("isNoteOn", &MIDISignal::mNoteOn)
@@ -20,56 +36,70 @@ EMSCRIPTEN_BINDINGS(music_library)
         .property("time", &MIDISignal::mTime)
     ;
 
-    emscripten::class_<MIDIStream>("MIDIStream")
+    class_<MIDIStream>("MIDIStream")
         .function("hasNext", &MIDIStream::hasNext)
         .function("getNext", &MIDIStream::getNext)
     ;
 
-    emscripten::class_<IGenerator>("IGenerator")
+    class_<IGenerator>("IGenerator")
         .function("getNext", &IGenerator::getNext)
     ;
 
-    emscripten::class_<IRule>("IRule");
+    class_<IRule>("IRule");
 
-    emscripten::class_<IRelativeNoteRule, emscripten::base<IRule>>("IRelativeNoteRule");
+    class_<IRelativeNoteRule, base<IRule>>("IRelativeNoteRule");
 
-    emscripten::class_<TestRule, emscripten::base<IRelativeNoteRule>>("TestRule")
+    class_<TestRule, base<IRelativeNoteRule>>("TestRule")
         .constructor()
     ;
 
-    emscripten::class_<IAbsoluteNoteRule, emscripten::base<IRule>>("IAbsoluteNoteRule");
+    class_<IAbsoluteNoteRule, base<IRule>>("IAbsoluteNoteRule");
 
-    emscripten::class_<BasicAbsoluteNoteRule, emscripten::base<IAbsoluteNoteRule>>("BasicAbsoluteNoteRule")
+    class_<BasicAbsoluteNoteRule, base<IAbsoluteNoteRule>>("BasicAbsoluteNoteRule")
         .constructor()
     ;
 
-    emscripten::class_<ITonicRule, emscripten::base<IRule>>("ITonicRule");
+    class_<ITonicRule, base<IRule>>("ITonicRule");
 
-    emscripten::class_<AbsoluteTonicRule, emscripten::base<ITonicRule>>("AbsoluteTonicRule")
+    class_<AbsoluteTonicRule, base<ITonicRule>>("AbsoluteTonicRule")
         .constructor<int>()
     ;
 
-    emscripten::class_<ISubdivisionRule, emscripten::base<IRule>>("ISubdivisionRule");
+    class_<ISubdivisionRule, base<IRule>>("ISubdivisionRule");
 
-    emscripten::class_<AbsoluteSubdivisionRule, emscripten::base<ISubdivisionRule>>("AbsoluteSubdivisionRule")
+    class_<AbsoluteSubdivisionRule, base<ISubdivisionRule>>("AbsoluteSubdivisionRule")
         .constructor<int>()
     ;
 
-    emscripten::class_<ITempoRule, emscripten::base<IRule>>("ITempoRule");
+    class_<ITempoRule, base<IRule>>("ITempoRule");
 
-    emscripten::class_<AbsoluteTempoRule, emscripten::base<ITempoRule>>("AbsoluteTempoRule")
+    class_<AbsoluteTempoRule, base<ITempoRule>>("AbsoluteTempoRule")
         .constructor<double>()
     ;
 
-    emscripten::class_<IGeneratorRule, emscripten::base<IRule>>("IGeneratorRule");
+    class_<IScaleRule, base<IRule>>("IScaleRule");
 
-    emscripten::class_<StructuredGeneratorRule, emscripten::base<IGeneratorRule>>("StructuredGeneratorRule")
+    class_<BasicScaleRule, base<IScaleRule>>("BasicScaleRule")
+        .constructor<SCALE>()
+    ;
+
+    class_<IChordProgressionRule, base<IRule>>("IChordProgressionRule");
+
+    class_<ScaleChordProgressionRule, base<IChordProgressionRule>>("ScaleChordProgressionRule")
+        .constructor<std::vector<int>>()
+    ;
+
+    class_<IGeneratorRule, base<IRule>>("IGeneratorRule");
+
+    class_<StructuredGeneratorRule, base<IGeneratorRule>>("StructuredGeneratorRule")
         .constructor()
     ;
 
-    emscripten::class_<Theme>("Theme")
+    register_vector<int>("vi");
+
+    class_<Theme>("Theme")
         .constructor()
         .function("addRule", &Theme::addRule)
-        .function("getGenerator", &Theme::getGenerator, emscripten::allow_raw_pointers())
+        .function("getGenerator", &Theme::getGenerator, allow_raw_pointers())
     ;
 }

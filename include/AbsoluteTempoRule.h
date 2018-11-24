@@ -5,7 +5,7 @@
 class AbsoluteTempoRule : public ITempoRule
 {
 private:
-  int mBpm;
+  double mBpm;
 public:
   AbsoluteTempoRule(double);
   void describe(RuleEnvironment&);

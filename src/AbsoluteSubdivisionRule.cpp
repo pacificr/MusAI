@@ -12,5 +12,5 @@ void AbsoluteSubdivisionRule::describe(RuleEnvironment& ruleEnvironment)
 
 double AbsoluteSubdivisionRule::applyTiming(int subdivision)
 {
-  return subdivision * (1 / (double)mNotesPerBeat);
+  return ((double)subdivision) * (1.0 / ((double)mNotesPerBeat));
 }
