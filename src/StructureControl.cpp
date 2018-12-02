@@ -8,7 +8,7 @@ StructureControl::StructureControl(IAbsoluteNoteRule* structure)
 
 void StructureControl::addControl(StructureControl* structureControl, RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule(mControlID, structureControl);
+  ruleEnvironment.addFulfillment(mControlID, structureControl);
 }
 
 IAbsoluteNoteRule& StructureControl::getNoteRule() const
@@ -18,5 +18,5 @@ IAbsoluteNoteRule& StructureControl::getNoteRule() const
 
 StructureControl& StructureControl::getNext(RuleEnvironment& ruleEnvironment) const
 {
-  return (StructureControl&)*ruleEnvironment.getRule(mControlID);
+  return *ruleEnvironment.getRule<StructureControl>(mControlID);
 }

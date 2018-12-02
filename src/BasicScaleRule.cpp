@@ -1,5 +1,10 @@
 #include "../include/BasicScaleRule.h"
 
+void BasicScaleRule::describe(RuleEnvironment& ruleEnvironment)
+{
+  ruleEnvironment.addFulfillment("Scale", this);
+}
+
 BasicScaleRule::BasicScaleRule(SCALE scale)
 {
   mScaleDegrees = {0, 2, 4, 5, 7, 9, 11};
@@ -32,11 +37,6 @@ BasicScaleRule::BasicScaleRule(SCALE scale)
   for (unsigned int i = 0; i < mScaleDegrees.size(); ++i)
     mScaleDegrees[i] = (mScaleDegrees[i] + offset) % 12;
 };
-
-void BasicScaleRule::describe(RuleEnvironment& ruleEnvironment)
-{
-  ruleEnvironment.addRule("Scale", this);
-}
 
 std::vector<int> BasicScaleRule::getScaleDegrees()
 {

@@ -8,6 +8,8 @@
 #include "../include/Theme.h"
 #include "../include/BasicScaleRule.h"
 #include "../include/ScaleChordProgressionRule.h"
+#include "../include/StepMelodyBuilder.h"
+#include "../include/BasicHarmonyRule.h"
 #include <emscripten/bind.h>
 
 using namespace emscripten;
@@ -53,6 +55,10 @@ EMSCRIPTEN_BINDINGS(music_library)
         .constructor()
     ;
 
+    class_<BasicHarmonyRule, base<IRelativeNoteRule>>("BasicHarmonyRule")
+        .constructor()
+    ;
+
     class_<IAbsoluteNoteRule, base<IRule>>("IAbsoluteNoteRule");
 
     class_<BasicAbsoluteNoteRule, base<IAbsoluteNoteRule>>("BasicAbsoluteNoteRule")
@@ -95,7 +101,13 @@ EMSCRIPTEN_BINDINGS(music_library)
         .constructor()
     ;
 
-    register_vector<int>("vi");
+    class_<IBuilder, base<IRule>>("IBuilder");
+
+    class_<StepMelodyBuilder, base<IBuilder>>("StepMelodyBuilder")
+        .constructor();
+    ;
+
+    register_vector<int>("IntVector");
 
     class_<Theme>("Theme")
         .constructor()

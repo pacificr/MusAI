@@ -9,13 +9,13 @@ ScaleChordProgressionRule::ScaleChordProgressionRule(std::vector<int> chordBases
 
 void ScaleChordProgressionRule::describe(RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule("ChordProg", this);
+  ruleEnvironment.addFulfillment("ChordProg", this);
 }
 
 std::vector<std::vector<int>> ScaleChordProgressionRule::getChords(RuleEnvironment& ruleEnvironment)
 {
   std::vector<std::vector<int>> chords;
-  std::vector<int> scale = ((IScaleRule*)ruleEnvironment.getRule("Scale"))->getScaleDegrees();
+  std::vector<int> scale = (ruleEnvironment.getRule<IScaleRule>("Scale"))->getScaleDegrees();
 
   for (auto base : mChordBases)
   {

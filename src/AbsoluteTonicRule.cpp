@@ -7,7 +7,7 @@ AbsoluteTonicRule::AbsoluteTonicRule(int tonic)
 
 void AbsoluteTonicRule::describe(RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule("Tonic", this);
+  ruleEnvironment.addFulfillment("Tonic", this);
 }
 
 int AbsoluteTonicRule::applyTonic(int pitch)

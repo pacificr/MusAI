@@ -7,7 +7,7 @@ AbsoluteSubdivisionRule::AbsoluteSubdivisionRule(int notesPerBeat)
 
 void AbsoluteSubdivisionRule::describe(RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule("Subdivision", this);
+  ruleEnvironment.addFulfillment("Subdivision", this);
 }
 
 double AbsoluteSubdivisionRule::applyTiming(int subdivision)

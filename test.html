@@ -19,22 +19,25 @@
         console.log('Testing');
 
         var theme = new Module.Theme();
-        var test = new Module.TestRule();
+        //var test = new Module.TestRule();
+        var melodyBuilder = new Module.StepMelodyBuilder();
+        var h = new Module.BasicHarmonyRule();
         var p = new Module.StructuredGeneratorRule();
         var nr = new Module.BasicAbsoluteNoteRule();
         var t = new Module.AbsoluteTonicRule(72);
         var s = new Module.AbsoluteSubdivisionRule(4);
         var tt = new Module.AbsoluteTempoRule(95);
         var ss = new Module.BasicScaleRule(Module.SCALE.MAJOR);
-        var vec = new Module.vi();
+        var vec = new Module.IntVector();
         vec.push_back(0);
-        vec.push_back(1);
-        vec.push_back(2);
         vec.push_back(3);
+        vec.push_back(0);
+        vec.push_back(4);
         var c = new Module.ScaleChordProgressionRule(vec);
 
         theme.addRule(p);
-        theme.addRule(test);
+        theme.addRule(melodyBuilder);
+        theme.addRule(h);
         theme.addRule(nr);
         theme.addRule(t);
         theme.addRule(s);
@@ -43,7 +46,7 @@
         theme.addRule(c);
         generator = theme.getGenerator();
 
-        synth = new Tone.PolySynth(4, Tone.Synth).toMaster();
+        synth = new Tone.PolySynth(5, Tone.Synth).toMaster();
 
         console.log('Start');
         updateTime()
@@ -59,7 +62,6 @@
     function scheduleNote(note, duration)
     {
       synth.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 1);
-      console.log("Scheduling note: " + (note.key) + " d: " + (duration) + " t: " + (note.time) + " ct: " + Tone.now().toFixed(3));
     }
 
     function updateTime(){
@@ -79,7 +81,6 @@
         while(stream.hasNext())
         {
           var note = stream.getNext();
-          console.log(note.getRaw());
           if (note.isNoteOn)
           {
             notes.push(note);
@@ -91,6 +92,8 @@
               if (notes[i].key == note.key && notes[i].channel == note.channel)
               {
                 scheduleNote (notes[i], note.time - notes[i].time);
+                if (note.time - notes[i].time < 2)
+                  console.log(note.key);
                 notes.splice(i, 1);
                 break;
               }

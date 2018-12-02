@@ -1,31 +1,20 @@
 #include "../include/RuleEnvironment.h"
 
-#include "../include/IRule.h"
+#include "../include/IBuilder.h"
 
 #include <string>
-#include <iostream>
 
-void RuleEnvironment::addRule(std::string fulfills, IRule* rule)
+void RuleEnvironment::addFulfillment(std::string fulfills, IRule* rule)
 {
   mRules.insert(std::pair<std::string, IRule*>(fulfills, rule));
 }
 
-IRule* RuleEnvironment::getRule(std::string requires)
+void RuleEnvironment::addBuilds(std::string builds, IBuilder* builder)
 {
-  if (mRules.count(requires) > 0)
-  {
-    unsigned int choice = rand() % mRules.count(requires);
-    
-    auto rules = mRules.find(requires);
+  mBuilds.insert(std::pair<std::string, IBuilder*>(builds, builder));
+}
 
-    for (unsigned int i = 0; i < choice; ++i)
-    {
-      ++rules;
-    }
-
-    return rules->second;
-  }
-  std::cout << "NO RULE FOUND FOR: " << requires << std::endl;
-  //Get default instead
-  return mRules.find(requires)->second;
+IRule *RuleEnvironment::getBuilt(IBuilder *builder)
+{
+  return builder->build(*this);
 }

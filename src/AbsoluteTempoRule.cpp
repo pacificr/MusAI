@@ -7,7 +7,7 @@ AbsoluteTempoRule::AbsoluteTempoRule(double bpm)
 
 void AbsoluteTempoRule::describe(RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule("Tempo", this);
+  ruleEnvironment.addFulfillment("Tempo", this);
 }
 
 double AbsoluteTempoRule::applyTempo(double relativeBeat)

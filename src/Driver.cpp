@@ -7,6 +7,8 @@
 #include "../include/AbsoluteTempoRule.h"
 #include "../include/BasicScaleRule.h"
 #include "../include/ScaleChordProgressionRule.h"
+#include "../include/StepMelodyBuilder.h"
+#include "../include/BasicHarmonyRule.h"
 
 #include <iostream>
 #include <memory>
@@ -16,7 +18,9 @@ int main()
   srand(time(NULL));
 
   Theme theme;
-  TestRule test;
+  //TestRule test;
+  StepMelodyBuilder melodyBuilder;
+  BasicHarmonyRule h;
   BasicAbsoluteNoteRule nr;
   StructuredGeneratorRule p;
   AbsoluteTonicRule t(72);
@@ -25,7 +29,8 @@ int main()
   BasicScaleRule ss(SCALE::MAJOR);
   ScaleChordProgressionRule c({0, 1, 2, 3});
   theme.addRule(p);
-  theme.addRule(test);
+  theme.addRule(melodyBuilder);
+  theme.addRule(h);
   theme.addRule(nr);
   theme.addRule(t);
   theme.addRule(s);
@@ -34,18 +39,12 @@ int main()
   theme.addRule(c);
   IGenerator* generator = theme.getGenerator();
 
-  MIDIStream stream = generator->getNext(1.5);
+  MIDIStream stream = generator->getNext(16);
 
   while (stream.hasNext())
   {
-    std::cout << stream.getNext().getRaw() << std::endl;
-  }
-
-  stream = generator->getNext(8);
-
-  while (stream.hasNext())
-  {
-    std::cout << stream.getNext().getRaw() << std::endl;
+    std::cout << stream.getNext().mKey << std::endl;
+    stream.getNext();
   }
 
   delete generator;

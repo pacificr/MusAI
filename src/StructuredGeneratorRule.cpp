@@ -5,12 +5,12 @@
 
 void StructuredGeneratorRule::describe(RuleEnvironment& ruleEnvironment)
 {
-  ruleEnvironment.addRule("Generator", this);
+  ruleEnvironment.addFulfillment("Generator", this);
 }
 
 IGenerator* StructuredGeneratorRule::getGenerator(RuleEnvironment* ruleEnvironment)
 {
-  IAbsoluteNoteRule* noteRule = (IAbsoluteNoteRule*)ruleEnvironment->getRule("TestA");
+  auto noteRule = ruleEnvironment->getRule<IAbsoluteNoteRule>("TestA");
 
   StructureControl* control = new StructureControl(noteRule);
   control->addControl(control, *ruleEnvironment);

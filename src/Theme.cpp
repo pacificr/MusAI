@@ -9,5 +9,5 @@ void Theme::addRule(IRule& rule)
 
 IGenerator* Theme::getGenerator()
 {
-  return ((IGeneratorRule*)mRuleEnvironment.getRule("Generator"))->getGenerator(&mRuleEnvironment);
+  return (mRuleEnvironment.getRule<IGeneratorRule>("Generator"))->getGenerator(&mRuleEnvironment);
 }
