@@ -14,6 +14,7 @@ private:
 public:
   StructuredGenerator(RuleEnvironment*, StructureControl*);
   ~StructuredGenerator();
+  void describe(RuleEnvironment&);
   MIDIStream getNext(double time);
   //MIDIStream getNext(int beats);
 };

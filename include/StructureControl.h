@@ -11,7 +11,7 @@ private:
   std::string mControlID;
   IAbsoluteNoteRule* mNoteRule;
 public:
-  StructureControl(IAbsoluteNoteRule*);
+  StructureControl(IAbsoluteNoteRule*, std::string);
 
   virtual void describe(RuleEnvironment&){};
 

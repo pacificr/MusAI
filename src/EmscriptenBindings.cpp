@@ -1,5 +1,4 @@
 #include "../include/MIDISignal.h"
-#include "../include/StructuredGeneratorRule.h"
 #include "../include/TestRule.h"
 #include "../include/BasicAbsoluteNoteRule.h"
 #include "../include/AbsoluteTonicRule.h"
@@ -10,6 +9,7 @@
 #include "../include/ScaleChordProgressionRule.h"
 #include "../include/StepMelodyBuilder.h"
 #include "../include/BasicHarmonyRule.h"
+#include "../include/StructuredGeneratorBuilder.h"
 #include <emscripten/bind.h>
 
 using namespace emscripten;
@@ -43,10 +43,6 @@ EMSCRIPTEN_BINDINGS(music_library)
         .function("getNext", &MIDIStream::getNext)
     ;
 
-    class_<IGenerator>("IGenerator")
-        .function("getNext", &IGenerator::getNext)
-    ;
-
     class_<IRule>("IRule");
 
     class_<IRelativeNoteRule, base<IRule>>("IRelativeNoteRule");
@@ -56,12 +52,6 @@ EMSCRIPTEN_BINDINGS(music_library)
     ;
 
     class_<BasicHarmonyRule, base<IRelativeNoteRule>>("BasicHarmonyRule")
-        .constructor()
-    ;
-
-    class_<IAbsoluteNoteRule, base<IRule>>("IAbsoluteNoteRule");
-
-    class_<BasicAbsoluteNoteRule, base<IAbsoluteNoteRule>>("BasicAbsoluteNoteRule")
         .constructor()
     ;
 
@@ -95,15 +85,17 @@ EMSCRIPTEN_BINDINGS(music_library)
         .constructor<std::vector<int>>()
     ;
 
-    class_<IGeneratorRule, base<IRule>>("IGeneratorRule");
-
-    class_<StructuredGeneratorRule, base<IGeneratorRule>>("StructuredGeneratorRule")
-        .constructor()
+    class_<IGenerator, base<IRule>>("IGenerator")
+        .function("getNext", &IGenerator::getNext)
     ;
 
     class_<IBuilder, base<IRule>>("IBuilder");
 
     class_<StepMelodyBuilder, base<IBuilder>>("StepMelodyBuilder")
+        .constructor();
+    ;
+
+    class_<StructuredGeneratorBuilder, base<IBuilder>>("StructuredGeneratorBuilder")
         .constructor();
     ;
 

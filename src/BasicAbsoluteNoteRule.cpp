@@ -5,16 +5,18 @@
 #include "../include/ISubdivisionRule.h"
 #include "../include/ITempoRule.h"
 
-void BasicAbsoluteNoteRule::describe(RuleEnvironment& ruleEnvironment)
+BasicAbsoluteNoteRule::BasicAbsoluteNoteRule(std::string id)
 {
-  ruleEnvironment.addFulfillment("TestA", this);
+  mID = id;
 }
+
+void BasicAbsoluteNoteRule::describe(RuleEnvironment& ruleEnvironment){}
 
 std::vector<AbsoluteNote> BasicAbsoluteNoteRule::getAbsoluteNotes(RuleEnvironment& ruleEnvironment)
 {
   std::vector<AbsoluteNote> ret;
 
-  auto melody = ruleEnvironment.getRule<IRelativeNoteRule>("Melody");
+  auto melody = ruleEnvironment.getRule<IRelativeNoteRule>("Melody_" + mID);
   auto harmony = ruleEnvironment.getRule<IRelativeNoteRule>("Harmony");
   auto tonic = ruleEnvironment.getRule<ITonicRule>("Tonic");
   auto subdivision = ruleEnvironment.getRule<ISubdivisionRule>("Subdivision");
@@ -47,7 +49,7 @@ std::vector<AbsoluteNote> BasicAbsoluteNoteRule::getAbsoluteNotes(RuleEnvironmen
 
 double BasicAbsoluteNoteRule::getLength(RuleEnvironment& ruleEnvironment)
 {
-  auto notes = ruleEnvironment.getRule<IRelativeNoteRule>("Melody");
+  auto notes = ruleEnvironment.getRule<IRelativeNoteRule>("Melody_" + mID);
   auto tempo = ruleEnvironment.getRule<ITempoRule>("Tempo");
 
   return tempo->applyTempo(notes->getLength(ruleEnvironment));

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "IRule.h"
+
 #include "MIDIStream.h"
 
-class IGenerator
+class IGenerator : public IRule
 {
 public:
   virtual ~IGenerator() = default;

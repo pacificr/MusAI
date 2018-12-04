@@ -13,6 +13,8 @@ StructuredGenerator::~StructuredGenerator()
   delete mStructureControl;
 }
 
+void StructuredGenerator::describe(RuleEnvironment &ruleEnvironment){}
+
 MIDIStream StructuredGenerator::getNext(double time)
 {
   MIDIStream signals;

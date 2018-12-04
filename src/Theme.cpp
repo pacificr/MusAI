@@ -1,6 +1,6 @@
 #include "../include/Theme.h"
 
-#include "../include/IGeneratorRule.h"
+#include "../include/IGenerator.h"
 
 void Theme::addRule(IRule& rule)
 {
@@ -9,5 +9,6 @@ void Theme::addRule(IRule& rule)
 
 IGenerator* Theme::getGenerator()
 {
-  return (mRuleEnvironment.getRule<IGeneratorRule>("Generator"))->getGenerator(&mRuleEnvironment);
+  srand(time(NULL));
+  return (mRuleEnvironment.getRule<IGenerator>("Generator"));
 }

@@ -22,8 +22,8 @@
         //var test = new Module.TestRule();
         var melodyBuilder = new Module.StepMelodyBuilder();
         var h = new Module.BasicHarmonyRule();
-        var p = new Module.StructuredGeneratorRule();
-        var nr = new Module.BasicAbsoluteNoteRule();
+        //var p = new Module.StructuredGeneratorRule();
+        var p = new Module.StructuredGeneratorBuilder();
         var t = new Module.AbsoluteTonicRule(72);
         var s = new Module.AbsoluteSubdivisionRule(4);
         var tt = new Module.AbsoluteTempoRule(95);
@@ -38,7 +38,6 @@
         theme.addRule(p);
         theme.addRule(melodyBuilder);
         theme.addRule(h);
-        theme.addRule(nr);
         theme.addRule(t);
         theme.addRule(s);
         theme.addRule(tt);
@@ -92,8 +91,8 @@
               if (notes[i].key == note.key && notes[i].channel == note.channel)
               {
                 scheduleNote (notes[i], note.time - notes[i].time);
-                if (note.time - notes[i].time < 2)
-                  console.log(note.key);
+                //if (note.time - notes[i].time < 2)
+                  //console.log(note.key);
                 notes.splice(i, 1);
                 break;
               }

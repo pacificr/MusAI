@@ -31,7 +31,7 @@ IRule *StepMelodyBuilder::build(RuleEnvironment &ruleEnvironment)
         possibleNotes.push_back(chord[2] + (i * 12));
       }
 
-      a.mPitch = possibleNotes[current];
+      a.mPitch = possibleNotes[current % possibleNotes.size()];
       a.mBeat = (i * 4) + j;
       a.mDurationBeat = 1;
 

@@ -1,6 +1,6 @@
 #include "../include/TestRule.h"
 #include "../include/Theme.h"
-#include "../include/StructuredGeneratorRule.h"
+#include "../include/StructuredGeneratorBuilder.h"
 #include "../include/BasicAbsoluteNoteRule.h"
 #include "../include/AbsoluteTonicRule.h"
 #include "../include/AbsoluteSubdivisionRule.h"
@@ -21,8 +21,8 @@ int main()
   //TestRule test;
   StepMelodyBuilder melodyBuilder;
   BasicHarmonyRule h;
-  BasicAbsoluteNoteRule nr;
-  StructuredGeneratorRule p;
+  //StructuredGeneratorRule p;
+  StructuredGeneratorBuilder p;
   AbsoluteTonicRule t(72);
   AbsoluteSubdivisionRule s(4);
   AbsoluteTempoRule tt(60);
@@ -31,7 +31,6 @@ int main()
   theme.addRule(p);
   theme.addRule(melodyBuilder);
   theme.addRule(h);
-  theme.addRule(nr);
   theme.addRule(t);
   theme.addRule(s);
   theme.addRule(tt);
