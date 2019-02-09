@@ -15,3 +15,8 @@ Session.vim
 tags
 # Persistent undo
 [._]*.un~
+
+
+
+#compile commands. generate with bear
+compile_commands.json
