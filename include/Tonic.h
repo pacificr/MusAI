@@ -4,6 +4,7 @@ class Tonic
 {
   public:
     Tonic(int, int base = 4);
-    int mValue;
+    int getCenterPitch();
+    int mPitch;
     int mBase;
 };

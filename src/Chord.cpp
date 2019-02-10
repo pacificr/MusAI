@@ -1,5 +1,5 @@
 #include "../include/Chord.h"
-#include <iostream>
+
 Chord::Chord(std::vector<int> chordDegrees, bool useScale)
 {
   mChordDegrees = chordDegrees;

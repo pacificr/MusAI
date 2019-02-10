@@ -17,6 +17,7 @@ tags
 [._]*.un~
 
 
-
 #compile commands. generate with bear
 compile_commands.json
+
+.vscode/*

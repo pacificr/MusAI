@@ -6,9 +6,8 @@ class IPitch
 {
   public:
     int mValue;
-    int mStrong;
 
-    IPitch(int value, bool strong) : mValue(value), mStrong(strong){};
+    IPitch(int value) : mValue(value){};
     virtual int resolve(Scale&, Chord&) = 0;
-    ~IPitch() = default;
+    virtual ~IPitch() = default;
 };

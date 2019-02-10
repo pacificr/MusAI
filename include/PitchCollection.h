@@ -2,13 +2,14 @@
 
 #include "IPitch.h"
 
+#include <memory>
 #include <vector>
 
 class PitchCollection
 {
   private:
-    std::vector<IPitch*> mPitches;
+    std::vector<std::unique_ptr<IPitch>> mPitches;
   public:
-    PitchCollection(std::vector<IPitch*>);
+    void add(IPitch*);
     IPitch& getPitch(int);
 };

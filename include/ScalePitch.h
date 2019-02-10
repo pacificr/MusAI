@@ -5,6 +5,6 @@
 class ScalePitch : public IPitch
 {
   public:
-    ScalePitch(int = 0, bool = true);
+    ScalePitch(int = 0);
     int resolve(Scale&, Chord&);
 };

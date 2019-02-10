@@ -1,3 +1,6 @@
+
+#include "../include/Logger.h"
+
 #include "../include/TestRule.h"
 #include "../include/Theme.h"
 #include "../include/StructuredGeneratorBuilder.h"
@@ -17,76 +20,15 @@
 #include <iostream>
 #include <memory>
 
-int main()
+int main(int argc, char* argv[])
 {
   srand(time(NULL));
 
-  std::vector<IPitch*> pv;
-
-
-  pv.push_back(new ChordPitch(0));
-  pv.push_back(new ChordPitch(1));
-  pv.push_back(new ChordPitch(2));
-  pv.push_back(new ChordPitch(3));
-  pv.push_back(new ChordPitch(4));
-  pv.push_back(new ChordPitch(5));
-  pv.push_back(new ChordPitch(6));
-  pv.push_back(new ChordPitch(-1));
-  pv.push_back(new ChordPitch(-2));
-  pv.push_back(new ChordPitch(-3));
-  pv.push_back(new ChordPitch(-4));
-  pv.push_back(new ChordPitch(-5));
-  pv.push_back(new ScalePitch(1));
-  pv.push_back(new ScalePitch(2));
-  pv.push_back(new ScalePitch(3));
-  pv.push_back(new ScalePitch(4));
-  pv.push_back(new ScalePitch(5));
-  pv.push_back(new ScalePitch(6));
-  pv.push_back(new ScalePitch(7));
-  pv.push_back(new ScalePitch(8));
-  pv.push_back(new ScalePitch(-1));
-  pv.push_back(new ScalePitch(-2));
-  pv.push_back(new ScalePitch(-3));
-  pv.push_back(new ScalePitch(-4));
-  pv.push_back(new ScalePitch(-5));
-  pv.push_back(new ScalePitch(-6));
-  pv.push_back(new ScalePitch(-7));
-  pv.push_back(new ScalePitch(-8));
-  pv.push_back(new ScalePitch(-14));
-  pv.push_back(new ScalePitch(-16));
-  pv.push_back(new ScalePitch(-17));
-
-  std::vector<int> scaleDegs;
-
-  scaleDegs.push_back(0);
-  scaleDegs.push_back(2);
-  scaleDegs.push_back(4);
-  scaleDegs.push_back(5);
-  scaleDegs.push_back(7);
-  scaleDegs.push_back(9);
-  scaleDegs.push_back(11);
-
-  Scale scale(scaleDegs);
-
-  std::vector<int> chordDegs;
-
-  chordDegs.push_back(0);
-  chordDegs.push_back(2);
-  chordDegs.push_back(4);
-
-  Chord chord(chordDegs);
-
-  PitchCollection pc(pv);
-
-
-
-
-  for (unsigned int i = 0; i < pv.size(); ++i)
+  Logger& logger = Logger::instance();
+  for (int i = 1; i < argc; ++i)
   {
-    std::cout << pc.getPitch(i).resolve(scale, chord) << std::endl;
-  }
-
-  std::cout << "================" << std::endl;
+    logger.enable(argv[i]);
+  } 
 
   Theme theme;
   //TestRule test;
@@ -113,7 +55,7 @@ int main()
 
   while (stream.hasNext())
   {
-    std::cout << stream.getNext().mKey << std::endl;
+    logger.log("test", std::to_string(stream.getNext().mKey));
     stream.getNext();
   }
 

@@ -1,5 +1,9 @@
 #include "../include/StructureControl.h"
 
+#include "../include/Logger.h"
+
+#define LOC "structure"
+
 StructureControl::StructureControl(IAbsoluteNoteRule* structure, std::string id)
 {
   mNoteRule = structure;
@@ -8,13 +12,13 @@ StructureControl::StructureControl(IAbsoluteNoteRule* structure, std::string id)
 
 void StructureControl::addControl(StructureControl* structureControl, RuleEnvironment& ruleEnvironment)
 {
-  std::cout << "ADDED: " << mControlID << " -> " << structureControl->mControlID << std::endl;
+  Logger::instance().log(LOC, "ADDED: " + mControlID + " -> " + structureControl->mControlID);
   ruleEnvironment.addFulfillment(mControlID, structureControl);
 }
 
 IAbsoluteNoteRule& StructureControl::getNoteRule() const
 {
-  std::cout << "USING: " << mControlID << std::endl;
+  Logger::instance().log(LOC, "USING: " + mControlID);
   return *mNoteRule;
 }
 

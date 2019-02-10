@@ -1,11 +1,13 @@
 #include "../include/PitchCollection.h"
 
-PitchCollection::PitchCollection(std::vector<IPitch*> pitches)
+void PitchCollection::add(IPitch* pitch)
 {
-  mPitches = pitches;
+  auto pitchPtr = std::unique_ptr<IPitch>(pitch);
+  mPitches.push_back(std::move(pitchPtr));
 }
 
 IPitch& PitchCollection::getPitch(int index)
 {
-  return *mPitches.at(index % mPitches.size());
+  int M = mPitches.size();
+  return *mPitches.at(((index % M) + M) % M);
 }

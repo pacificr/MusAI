@@ -1,5 +1,8 @@
 #include "../include/AbsoluteNote.h"
 
+AbsoluteNote::AbsoluteNote(int key, double time, double duration, int velocity)
+  : mKey(key), mTime(time), mDuration(duration), mVelocity(velocity) {}
+
 MIDISignal AbsoluteNote::getNoteOn(double offset = 0) const
 {
     MIDISignal signal;

@@ -28,9 +28,9 @@ template <class T> T* RuleEnvironment::getRule(std::string requires)
     {
       ++rules;
     }
-    std::cout << "ADDING FULFILLMENT: " << requires << std::endl;
+    //std::cout << "ADDING FULFILLMENT: " << requires << std::endl;
     IRule *newRule = getBuilt(*rules->second);
-    std::cout << "ADDED FULFILLMENT: " << requires << std::endl;
+    //std::cout << "ADDED FULFILLMENT: " << requires << std::endl;
     addFulfillment(requires, newRule);
     return (T*)newRule;
   }

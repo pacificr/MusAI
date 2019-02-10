@@ -1,6 +1,6 @@
 #include "../include/ChordPitch.h"
 
-ChordPitch::ChordPitch(int value, bool strong) : IPitch(value, strong){}
+ChordPitch::ChordPitch(int value) : IPitch(value){}
 
 int ChordPitch::resolve(Scale& scale, Chord& chord)
 {
