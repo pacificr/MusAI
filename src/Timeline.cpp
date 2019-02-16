@@ -1,85 +1,115 @@
 #include "../include/Timeline.h"
 
-//Temp
+#include "../include/Logger.h"
+#define LOC "timeline"
 
-#include "../include/ScalePitch.h"
-#include "../include/ChordPitch.h"
+void Timeline::addTrack(std::string track)
+{
+  if (track == "default")
+    Logger::instance().log(LOC, "Cannot ad default or default_timeless");
+  mTracks.push_back(track);
+  mTempos.insert(std::pair<std::string, TimelineTrack<Tempo>>(track, TimelineTrack<Tempo>()));
+  mTonics.insert(std::pair<std::string, TimelineTrack<Tonic>>(track, TimelineTrack<Tonic>()));
+  mScales.insert(std::pair<std::string, TimelineTrack<Scale>>(track, TimelineTrack<Scale>()));
+  mChords.insert(std::pair<std::string, TimelineTrack<Chord>>(track, TimelineTrack<Chord>()));
+  mPitchCollections.insert(std::pair<std::string, TimelineTrack<PitchCollection>>(track, TimelineTrack<PitchCollection>()));
+  mRhythms.insert(std::pair<std::string, TimelineTrack<Rhythm>>(track, TimelineTrack<Rhythm>()));
+}
 
 std::vector<std::string> Timeline::getTracks()
 {
-  std::vector<std::string> temp;
-
-  temp.push_back("");
-  return temp;
+  return mTracks;
 }
 
-Tempo Timeline::getTempo(std::string track, int beat)
-{
-  return Tempo(80);
+void Timeline::add(Tempo* tempo, std::string track, int begin, int end)
+{  
+  mTempos.at(track).add(TimelineBucket<Tempo>(tempo, begin, end));
 }
 
-Tonic Timeline::getTonic(std::string track, int beat)
+void Timeline::add(Tonic* tonic, std::string track, int begin, int end)
 {
-  return Tonic(1);
+  mTonics.at(track).add(TimelineBucket<Tonic>(tonic, begin, end));
 }
 
-Scale& Timeline::getScale(std::string track, int beat)
+void Timeline::add(Scale* scale, std::string track, int begin, int end)
 {
-  std::vector<int> sd;
-  sd.push_back(0);
-  sd.push_back(2);
-  sd.push_back(4);
-  sd.push_back(5);
-  sd.push_back(7);
-  sd.push_back(9);
-  sd.push_back(11);
-  Scale* scale = new Scale(sd);
-  return *scale;
+  mScales.at(track).add(TimelineBucket<Scale>(scale, begin, end));
 }
 
-Chord& Timeline::getChord(std::string track, int beat)
+void Timeline::add(Chord* chord, std::string track, int begin, int end)
 {
-  std::vector<int> cd;
-  cd.push_back(0);
-  cd.push_back(2);
-  cd.push_back(4);
-  Chord* chord = new Chord(cd);
-  return *chord;
+  mChords.at(track).add(TimelineBucket<Chord>(chord, begin, end));
 }
 
-PitchCollection& Timeline::getPitchCollection(std::string track, int beat)
+void Timeline::add(PitchCollection* pitches, std::string track, int begin, int end)
 {
-  PitchCollection* pc = new PitchCollection();
-
-  pc->add(new ScalePitch(2));
-  pc->add(new ScalePitch(1));
-  pc->add(new ScalePitch(2));
-  pc->add(new ScalePitch(-14));
-  pc->add(new ScalePitch(-15));
-  pc->add(new ScalePitch(6));
-  pc->add(new ScalePitch(8));
-  pc->add(new ScalePitch(9));
-
-
-  pc->add(new ChordPitch(-7));  
-  pc->add(new ChordPitch(0));  
-  pc->add(new ChordPitch(1));  
-  pc->add(new ChordPitch(2));
-
-  return *pc;
+  mPitchCollections.at(track).add(TimelineBucket<PitchCollection>(pitches, begin, end));
 }
 
-Rhythm& Timeline::getRhythm(std::string track, int beat)
+void Timeline::add(Rhythm* rhythm, std::string track, int begin, int end)
 {
-  std::vector<RhythmicNote> n;
+  mRhythms.at(track).add(TimelineBucket<Rhythm>(rhythm, begin, end));
+}
 
-  for (int i = 0; i < 20; ++i)
+std::vector<AbsoluteNote> Timeline::getNotes(std::string track)
+{
+  Logger& logger = Logger::instance(); 
+  int currentBeat = 0;
+  int currentPitch = 0;
+  //PitchCollection* oldPitchCollection = NULL;
+  std::vector<AbsoluteNote> notes; 
+
+  Rhythm* rhythm = mRhythms.at(track).getObject(currentBeat);
+  if (NULL == rhythm)
+    rhythm = mRhythms.at("default").getObject(currentBeat);
+
+  for (RhythmicNote rhythmicNote : rhythm->getNotes())
   {
-    RhythmicNote r;
-    r.mStartBeat = i;
-    n.push_back(r);
-  }
-  Rhythm* rhythm = new Rhythm(n, 10);
+    PitchCollection* pitches = mPitchCollections.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == pitches)
+      pitches = mPitchCollections.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-  return *rhythm;
+    /*if (&pitchCollection != oldPitchCollection) compare starting beats of pitch collection stored in Timeline
+    {
+      oldPitchCollection = &pitchCollection;
+      currentPitch = 0;
+    }*/
+    Scale* scale = mScales.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == scale)
+      scale = mScales.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+
+    Chord* chord = mChords.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == chord)
+      chord = mChords.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+
+    Tempo* tempo = mTempos.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == tempo)
+      tempo = mTempos.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+
+    Tonic* tonic = mTonics.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == tonic)
+      tonic = mTonics.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+
+    AbsoluteNote note(
+        tonic->getCenterPitch() + pitches->getPitch(currentPitch).resolve(*scale, *chord),
+        tempo->applyTempo(
+          double(currentBeat)
+          + double(rhythmicNote.mStartBeat)
+          + (double(rhythmicNote.mStartValue) / double(rhythmicNote.mStartSubdivision))
+        ),
+        tempo->applyTempo(double(rhythmicNote.mValue) / double(rhythmicNote.mSubdivision))
+    );
+
+    logger.log(LOC, "adding note on track " + track
+        + " " + std::to_string(note.mKey)
+        + " " + std::to_string(note.mTime)
+        + " " + std::to_string(note.mDuration)
+        + " " + std::to_string(note.mVelocity)
+    );
+    notes.push_back(note);
+
+    ++currentPitch;
+  }
+
+  return notes;
 }
