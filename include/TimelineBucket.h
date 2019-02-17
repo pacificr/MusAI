@@ -1,13 +1,15 @@
 #pragma once
 
+#include <memory>
+
 template <typename T> class TimelineBucket
 {
   private:
-    T* mObject;
+    std::shared_ptr<T> mObject;
     int mBegin;
     int mEnd;
   public:
-    TimelineBucket(T* object, int begin, int end)
+    TimelineBucket(std::shared_ptr<T> object, int begin, int end)
       : mObject(object), mBegin(begin), mEnd(end) {}
 
     bool matches(int beat)
@@ -20,7 +22,7 @@ template <typename T> class TimelineBucket
       return mBegin == -1 || mEnd == -1;
     }
 
-    T* getObject()
+    std::shared_ptr<T> getObject()
     {
       return mObject;
     }

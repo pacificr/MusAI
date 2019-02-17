@@ -6,9 +6,9 @@
 class TimelineAbsoluteNoteRule : public IAbsoluteNoteRule
 {
   private:
-    Timeline* mTimeline;
+    std::shared_ptr<Timeline> mTimeline;
   public:
-    TimelineAbsoluteNoteRule(Timeline* timeline);
+    TimelineAbsoluteNoteRule(std::shared_ptr<Timeline> timeline);
     void describe(RuleEnvironment&);
     std::vector<AbsoluteNote> getAbsoluteNotes(RuleEnvironment&);
     double getLength(RuleEnvironment&);

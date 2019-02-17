@@ -1,9 +1,8 @@
 #include "../include/PitchCollection.h"
 
-void PitchCollection::add(IPitch* pitch)
+void PitchCollection::add(std::shared_ptr<IPitch> pitch)
 {
-  auto pitchPtr = std::unique_ptr<IPitch>(pitch);
-  mPitches.push_back(std::move(pitchPtr));
+  mPitches.push_back(pitch);
 }
 
 IPitch& PitchCollection::getPitch(int index)

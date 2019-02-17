@@ -8,10 +8,10 @@
 class StructureControl : public IRule
 {
 private:
+  std::shared_ptr<IAbsoluteNoteRule> mNoteRule;
   std::string mControlID;
-  IAbsoluteNoteRule* mNoteRule;
 public:
-  StructureControl(IAbsoluteNoteRule*, std::string);
+  StructureControl(std::shared_ptr<IAbsoluteNoteRule>, std::string);
 
   virtual void describe(RuleEnvironment&){};
 

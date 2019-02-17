@@ -1,7 +1,6 @@
 #include "../include/StructuredGeneratorBuilder.h"
 
 #include "../include/StructuredGenerator.h"
-#include "../include/BasicAbsoluteNoteRule.h"
 #include "../include/StructureControl.h"
 #include "../include/TimelineAbsoluteNoteRule.h"
 //#include "../include/IBuilder.h"
@@ -29,7 +28,6 @@ IRule *StructuredGeneratorBuilder::build(RuleEnvironment &ruleEnvironment)
   int numSections = (rand() % (mMaxSections - mMinSections + 1)) + mMinSections;
   int sectionsToBuild = numSections - 1;
   int current = 0;
-  //IBuilder *melodyBuilder = ruleEnvironment.getBuilder("Melody");
 
   logger.log(LOC, "numSections: " + std::to_string(numSections));
 
@@ -47,30 +45,30 @@ IRule *StructuredGeneratorBuilder::build(RuleEnvironment &ruleEnvironment)
   sd.push_back(7);
   sd.push_back(9);
   sd.push_back(11);
-  Scale* scale = new Scale(sd);
+  std::shared_ptr<Scale> scale = std::make_shared<Scale>(Scale(sd));
   
   std::vector<int> cd;
   cd.push_back(0);
   cd.push_back(2);
   cd.push_back(4);
-  Chord* chord = new Chord(cd);
+  std::shared_ptr<Chord> chord = std::make_shared<Chord>(Chord(cd));
 
-  PitchCollection* pc = new PitchCollection();
+  std::shared_ptr<PitchCollection> pc = std::make_shared<PitchCollection>(PitchCollection());
 
-  pc->add(new ScalePitch(2));
-  pc->add(new ScalePitch(1));
-  pc->add(new ScalePitch(2));
-  pc->add(new ScalePitch(-14));
-  pc->add(new ScalePitch(-15));
-  pc->add(new ScalePitch(6));
-  pc->add(new ScalePitch(8));
-  pc->add(new ScalePitch(9));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(2)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(1)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(2)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(-14)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(-15)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(6)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(8)));
+  pc->add(std::make_shared<ScalePitch>(ScalePitch(9)));
 
 
-  pc->add(new ChordPitch(-7));
-  pc->add(new ChordPitch(0));
-  pc->add(new ChordPitch(1));
-  pc->add(new ChordPitch(2));
+  pc->add(std::make_shared<ChordPitch>(ChordPitch(-7)));
+  pc->add(std::make_shared<ChordPitch>(ChordPitch(0)));
+  pc->add(std::make_shared<ChordPitch>(ChordPitch(1)));
+  pc->add(std::make_shared<ChordPitch>(ChordPitch(2)));
 
   std::vector<RhythmicNote> n;
 
@@ -80,19 +78,19 @@ IRule *StructuredGeneratorBuilder::build(RuleEnvironment &ruleEnvironment)
     r.mStartBeat = i;
     n.push_back(r);
   }
-  Rhythm* rhythm = new Rhythm(n, 10);
+  std::shared_ptr<Rhythm> rhythm = std::make_shared<Rhythm>(Rhythm(n, 10));
 
 
-  Timeline* timeline = new Timeline();
+  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>(Timeline());
   timeline->addTrack("test");
-  timeline->add(new Tempo(80), "test");
-  timeline->add(new Tonic(1), "test");
+  timeline->add(std::make_shared<Tempo>(Tempo(80)), "test");
+  timeline->add(std::make_shared<Tonic>(Tonic(1)), "test");
   timeline->add(scale, "test");
   timeline->add(chord, "test");
   timeline->add(pc, "test");
   timeline->add(rhythm, "test");
 
-  sections[current] = new StructureControl(new TimelineAbsoluteNoteRule(timeline), id);
+  sections[current] = new StructureControl(std::make_shared<TimelineAbsoluteNoteRule>(TimelineAbsoluteNoteRule(timeline)), id);
   /*sections[current] = new StructureControl(
     new BasicAbsoluteNoteRule(id),
     id
@@ -112,7 +110,7 @@ IRule *StructuredGeneratorBuilder::build(RuleEnvironment &ruleEnvironment)
       if(sections[selection] == NULL)
       {
         id = std::to_string(rand());
-        sections[current] = new StructureControl(new TimelineAbsoluteNoteRule(timeline), id);
+        sections[current] = new StructureControl(std::make_shared<TimelineAbsoluteNoteRule>(TimelineAbsoluteNoteRule(timeline)), id);
         /*sections[selection] = new StructureControl(
           new BasicAbsoluteNoteRule(id),
           id

@@ -8,8 +8,8 @@
 class PitchCollection
 {
   private:
-    std::vector<std::unique_ptr<IPitch>> mPitches;
+    std::vector<std::shared_ptr<IPitch>> mPitches;
   public:
-    void add(IPitch*);
+    void add(std::shared_ptr<IPitch>);
     IPitch& getPitch(int);
 };

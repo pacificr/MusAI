@@ -5,7 +5,7 @@
 #include "../include/Logger.h"
 #define LOC "timeline"
 
-TimelineAbsoluteNoteRule::TimelineAbsoluteNoteRule(Timeline* timeline)
+TimelineAbsoluteNoteRule::TimelineAbsoluteNoteRule(std::shared_ptr<Timeline> timeline)
   : mTimeline(timeline){}
 
 void TimelineAbsoluteNoteRule::describe(RuleEnvironment& ruleEnvironment){}

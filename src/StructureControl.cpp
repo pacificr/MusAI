@@ -4,11 +4,8 @@
 
 #define LOC "structure"
 
-StructureControl::StructureControl(IAbsoluteNoteRule* structure, std::string id)
-{
-  mNoteRule = structure;
-  mControlID = id;
-}
+StructureControl::StructureControl(std::shared_ptr<IAbsoluteNoteRule> structure, std::string id)
+  : mNoteRule(structure), mControlID(id){}
 
 void StructureControl::addControl(StructureControl* structureControl, RuleEnvironment& ruleEnvironment)
 {

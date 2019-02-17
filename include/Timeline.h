@@ -10,12 +10,13 @@
 #include "TimelineTrack.h"
 
 #include <map>
+#include <set>
 #include <string>
 
 class Timeline
 {
   private:
-    std::vector<std::string> mTracks;
+    std::set<std::string> mTracks;
 
     std::map<std::string, TimelineTrack<Tempo>> mTempos;
     std::map<std::string, TimelineTrack<Tonic>> mTonics;
@@ -23,16 +24,19 @@ class Timeline
     std::map<std::string, TimelineTrack<Chord>> mChords;
     std::map<std::string, TimelineTrack<PitchCollection>> mPitchCollections;
     std::map<std::string, TimelineTrack<Rhythm>> mRhythms;
-  public:
-    void addTrack(std::string);
-    std::vector<std::string> getTracks();
 
-    void add(Tempo*, std::string track = "default", int startBeat = -1, int endBeat = -1);
-    void add(Tonic*, std::string track = "default", int startBeat = -1, int endBeat = -1);
-    void add(Scale*, std::string track = "default", int startBeat = -1, int endBeat = -1);
-    void add(Chord*, std::string track = "default", int startBeat = -1, int endBeat = -1);
-    void add(PitchCollection*, std::string track = "default", int startBeat = -1, int endBeat = -1);
-    void add(Rhythm*, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void addTrackNow(std::string);
+  public:
+    Timeline();
+    void addTrack(std::string);
+    std::set<std::string> getTracks();
+
+    void add(std::shared_ptr<Tempo>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<Tonic>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<Scale>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<Chord>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<PitchCollection>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<Rhythm>, std::string track = "default", int startBeat = -1, int endBeat = -1);
 
     std::vector<AbsoluteNote> getNotes(std::string track);
 };

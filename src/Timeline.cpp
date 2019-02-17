@@ -3,11 +3,13 @@
 #include "../include/Logger.h"
 #define LOC "timeline"
 
-void Timeline::addTrack(std::string track)
+Timeline::Timeline()
 {
-  if (track == "default")
-    Logger::instance().log(LOC, "Cannot ad default or default_timeless");
-  mTracks.push_back(track);
+  addTrackNow("default");
+}
+
+void Timeline::addTrackNow(std::string track)
+{
   mTempos.insert(std::pair<std::string, TimelineTrack<Tempo>>(track, TimelineTrack<Tempo>()));
   mTonics.insert(std::pair<std::string, TimelineTrack<Tonic>>(track, TimelineTrack<Tonic>()));
   mScales.insert(std::pair<std::string, TimelineTrack<Scale>>(track, TimelineTrack<Scale>()));
@@ -16,37 +18,46 @@ void Timeline::addTrack(std::string track)
   mRhythms.insert(std::pair<std::string, TimelineTrack<Rhythm>>(track, TimelineTrack<Rhythm>()));
 }
 
-std::vector<std::string> Timeline::getTracks()
+void Timeline::addTrack(std::string track)
+{
+  if (mTracks.find(track) == mTracks.end())
+  {
+    mTracks.insert(track);
+    addTrackNow(track);
+  }
+}
+
+std::set<std::string> Timeline::getTracks()
 {
   return mTracks;
 }
 
-void Timeline::add(Tempo* tempo, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<Tempo> tempo, std::string track, int begin, int end)
 {  
   mTempos.at(track).add(TimelineBucket<Tempo>(tempo, begin, end));
 }
 
-void Timeline::add(Tonic* tonic, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<Tonic> tonic, std::string track, int begin, int end)
 {
   mTonics.at(track).add(TimelineBucket<Tonic>(tonic, begin, end));
 }
 
-void Timeline::add(Scale* scale, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<Scale> scale, std::string track, int begin, int end)
 {
   mScales.at(track).add(TimelineBucket<Scale>(scale, begin, end));
 }
 
-void Timeline::add(Chord* chord, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<Chord> chord, std::string track, int begin, int end)
 {
   mChords.at(track).add(TimelineBucket<Chord>(chord, begin, end));
 }
 
-void Timeline::add(PitchCollection* pitches, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<PitchCollection> pitches, std::string track, int begin, int end)
 {
   mPitchCollections.at(track).add(TimelineBucket<PitchCollection>(pitches, begin, end));
 }
 
-void Timeline::add(Rhythm* rhythm, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<Rhythm> rhythm, std::string track, int begin, int end)
 {
   mRhythms.at(track).add(TimelineBucket<Rhythm>(rhythm, begin, end));
 }
@@ -59,13 +70,13 @@ std::vector<AbsoluteNote> Timeline::getNotes(std::string track)
   //PitchCollection* oldPitchCollection = NULL;
   std::vector<AbsoluteNote> notes; 
 
-  Rhythm* rhythm = mRhythms.at(track).getObject(currentBeat);
+  std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject(currentBeat);
   if (NULL == rhythm)
     rhythm = mRhythms.at("default").getObject(currentBeat);
 
   for (RhythmicNote rhythmicNote : rhythm->getNotes())
   {
-    PitchCollection* pitches = mPitchCollections.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<PitchCollection> pitches = mPitchCollections.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == pitches)
       pitches = mPitchCollections.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
@@ -74,19 +85,19 @@ std::vector<AbsoluteNote> Timeline::getNotes(std::string track)
       oldPitchCollection = &pitchCollection;
       currentPitch = 0;
     }*/
-    Scale* scale = mScales.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Scale> scale = mScales.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == scale)
       scale = mScales.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-    Chord* chord = mChords.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Chord> chord = mChords.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == chord)
       chord = mChords.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-    Tempo* tempo = mTempos.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == tempo)
       tempo = mTempos.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-    Tonic* tonic = mTonics.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == tonic)
       tonic = mTonics.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
