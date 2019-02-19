@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IRule.h"
 #include "IGenerator.h"
+#include "BuilderSet.h"
 
 class Theme
 {
-private:
-  RuleEnvironment mRuleEnvironment;
-public:
-  void addRule(IRule&);
-  IGenerator* getGenerator();
+  private:
+    BuilderSet<IGenerator> mGenerator;
+  public:
+    Theme();
+    std::shared_ptr<IGenerator> getGenerator();
 };

@@ -6,7 +6,7 @@
 #include "Chord.h"
 #include "PitchCollection.h"
 #include "Rhythm.h"
-#include "AbsoluteNote.h"
+#include "Note.h"
 #include "TimelineTrack.h"
 
 #include <map>
@@ -29,7 +29,7 @@ class Timeline
   public:
     Timeline();
     void addTrack(std::string);
-    std::set<std::string> getTracks();
+    std::set<std::string> getTracks() const;
 
     void add(std::shared_ptr<Tempo>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Tonic>, std::string track = "default", int startBeat = -1, int endBeat = -1);
@@ -38,5 +38,5 @@ class Timeline
     void add(std::shared_ptr<PitchCollection>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Rhythm>, std::string track = "default", int startBeat = -1, int endBeat = -1);
 
-    std::vector<AbsoluteNote> getNotes(std::string track);
+    std::vector<Note> getNotes(std::string track);
 };

@@ -1,14 +1,16 @@
 #include "../include/Theme.h"
 
-#include "../include/IGenerator.h"
+#include "../include/StructuredGeneratorBuilder.h"
 
-void Theme::addRule(IRule& rule)
+#include <time.h>
+
+Theme::Theme()
 {
-  rule.describe(mRuleEnvironment);
+  mGenerator.add(std::make_shared<StructuredGeneratorBuilder>());
 }
 
-IGenerator* Theme::getGenerator()
+std::shared_ptr<IGenerator> Theme::getGenerator()
 {
   srand(time(NULL));
-  return (mRuleEnvironment.getRule<IGenerator>("Generator"));
+  return mGenerator.get();
 }

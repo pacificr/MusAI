@@ -3,8 +3,8 @@
 class Tempo
 {
   public:
-    Tempo(int);
+    Tempo(double);
     double mBpm;
 
-    double applyTempo(double);
+    double applyTempo(double) const;
 };

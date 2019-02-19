@@ -11,5 +11,5 @@ public:
     int mVelocity = 0;
     double mTime = 0;
 
-    std::string getRaw();
+    std::string getRaw() const;
 };

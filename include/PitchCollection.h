@@ -11,5 +11,5 @@ class PitchCollection
     std::vector<std::shared_ptr<IPitch>> mPitches;
   public:
     void add(std::shared_ptr<IPitch>);
-    IPitch& getPitch(int);
+    IPitch& getPitch(int) const;
 };

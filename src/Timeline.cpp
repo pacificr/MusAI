@@ -27,7 +27,7 @@ void Timeline::addTrack(std::string track)
   }
 }
 
-std::set<std::string> Timeline::getTracks()
+std::set<std::string> Timeline::getTracks() const
 {
   return mTracks;
 }
@@ -62,13 +62,13 @@ void Timeline::add(std::shared_ptr<Rhythm> rhythm, std::string track, int begin,
   mRhythms.at(track).add(TimelineBucket<Rhythm>(rhythm, begin, end));
 }
 
-std::vector<AbsoluteNote> Timeline::getNotes(std::string track)
+std::vector<Note> Timeline::getNotes(std::string track)
 {
   Logger& logger = Logger::instance(); 
   int currentBeat = 0;
   int currentPitch = 0;
   //PitchCollection* oldPitchCollection = NULL;
-  std::vector<AbsoluteNote> notes; 
+  std::vector<Note> notes; 
 
   std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject(currentBeat);
   if (NULL == rhythm)
@@ -101,7 +101,7 @@ std::vector<AbsoluteNote> Timeline::getNotes(std::string track)
     if (NULL == tonic)
       tonic = mTonics.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-    AbsoluteNote note(
+    Note note(
         tonic->getCenterPitch() + pitches->getPitch(currentPitch).resolve(*scale, *chord),
         tempo->applyTempo(
           double(currentBeat)

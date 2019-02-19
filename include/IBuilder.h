@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IRule.h"
+#include <memory>
 
-class IBuilder : public IRule
+template <typename T> class IBuilder
 {
-public:
-  virtual ~IBuilder() = default;
-  virtual IRule *build(RuleEnvironment&) = 0;
+  public:
+    virtual ~IBuilder() = default;
+    virtual std::shared_ptr<T> build() = 0;
 };

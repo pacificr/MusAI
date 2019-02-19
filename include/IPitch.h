@@ -8,6 +8,6 @@ class IPitch
     int mValue;
 
     IPitch(int value) : mValue(value){};
-    virtual int resolve(Scale&, Chord&) = 0;
     virtual ~IPitch() = default;
+    virtual int resolve(Scale&, Chord&) const = 0;
 };

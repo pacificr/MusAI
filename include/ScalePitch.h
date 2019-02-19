@@ -6,5 +6,5 @@ class ScalePitch : public IPitch
 {
   public:
     ScalePitch(int = 0);
-    int resolve(Scale&, Chord&);
+    int resolve(Scale&, Chord&) const;
 };

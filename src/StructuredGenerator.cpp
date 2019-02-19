@@ -1,19 +1,12 @@
 #include "../include/StructuredGenerator.h"
 
-#include "../include/IAbsoluteNoteRule.h"
+#include "../include/INoteCollection.h"
 
-StructuredGenerator::StructuredGenerator(RuleEnvironment* ruleEnvironment, StructureControl* structureControl)
+StructuredGenerator::StructuredGenerator(std::vector<std::shared_ptr<StructureControl>>& controls)
 {
-  mRuleEnvironment = ruleEnvironment;
-  mStructureControl = structureControl;
+  mControls = controls;
+  mStructureControl = controls[0];
 }
-
-StructuredGenerator::~StructuredGenerator()
-{
-  delete mStructureControl;
-}
-
-void StructuredGenerator::describe(RuleEnvironment &ruleEnvironment){}
 
 MIDIStream StructuredGenerator::getNext(double time)
 {
@@ -21,9 +14,9 @@ MIDIStream StructuredGenerator::getNext(double time)
 
   while (time > mStructureStart + mTimeElapsed)
   {
-    IAbsoluteNoteRule& notes = mStructureControl->getNoteRule();
+    INoteCollection& notes = mStructureControl->getNoteCollection();
 
-    for(AbsoluteNote note : notes.getAbsoluteNotes(*mRuleEnvironment))
+    for(Note note : notes.getNotes())
     {
       if (note.occursBetween(mTimeElapsed, time - mStructureStart))
       {
@@ -34,11 +27,11 @@ MIDIStream StructuredGenerator::getNext(double time)
 
     mTimeElapsed = time - mStructureStart;
 
-    if (time - mStructureStart > notes.getLength(*mRuleEnvironment))
+    if (time - mStructureStart > notes.getLength())
     {
       mTimeElapsed = 0;
-      mStructureStart += notes.getLength(*mRuleEnvironment);
-      mStructureControl = &mStructureControl->getNext(*mRuleEnvironment);
+      mStructureStart += notes.getLength();
+      mStructureControl = mStructureControl->getNext();
     }
   }
 

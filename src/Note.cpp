@@ -1,9 +1,9 @@
-#include "../include/AbsoluteNote.h"
+#include "../include/Note.h"
 
-AbsoluteNote::AbsoluteNote(int key, double time, double duration, int velocity)
+Note::Note(int key, double time, double duration, int velocity)
   : mKey(key), mTime(time), mDuration(duration), mVelocity(velocity) {}
 
-MIDISignal AbsoluteNote::getNoteOn(double offset = 0) const
+MIDISignal Note::getNoteOn(double offset = 0) const
 {
     MIDISignal signal;
     signal.mNoteOn = true;
@@ -13,7 +13,7 @@ MIDISignal AbsoluteNote::getNoteOn(double offset = 0) const
     return signal;
 }
 
-MIDISignal AbsoluteNote::getNoteOff(double offset = 0) const
+MIDISignal Note::getNoteOff(double offset = 0) const
 {
     MIDISignal signal;
     signal.mKey = mKey;
@@ -21,7 +21,7 @@ MIDISignal AbsoluteNote::getNoteOff(double offset = 0) const
     return signal;
 }
 
-bool AbsoluteNote::occursBetween(double start, double end) const
+bool Note::occursBetween(double start, double end) const
 {
     return start <= mTime && mTime < end;
 }

@@ -12,17 +12,17 @@ template <typename T> class TimelineBucket
     TimelineBucket(std::shared_ptr<T> object, int begin, int end)
       : mObject(object), mBegin(begin), mEnd(end) {}
 
-    bool matches(int beat)
+    bool matches(int beat) const
     {
       return mBegin == -1 || mEnd == -1 || (mBegin <= beat && beat < mEnd);
     }
 
-    bool noTime()
+    bool noTime() const
     {
       return mBegin == -1 || mEnd == -1;
     }
 
-    std::shared_ptr<T> getObject()
+    std::shared_ptr<T> getObject() const
     {
       return mObject;
     }

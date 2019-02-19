@@ -8,6 +8,6 @@ class Scale
     std::vector<int> mScaleDegrees;
   public:
     Scale(std::vector<int>);
-    int resolveDegree(int);
-    unsigned int size();
+    int resolveDegree(int) const;
+    unsigned int size() const;
 };

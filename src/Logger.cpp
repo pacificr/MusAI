@@ -15,7 +15,7 @@ void Logger::enable(std::string location)
     mPrintAll = true;
 }
 
-void Logger::log(std::string location, std::string message)
+void Logger::log(std::string location, std::string message) const
 {
   if (mPrintAll || mLocations.find(location) != mLocations.end())
   {

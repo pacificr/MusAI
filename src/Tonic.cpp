@@ -6,7 +6,7 @@ Tonic::Tonic(int pitch, int base)
   mBase = base;
 }
 
-int Tonic::getCenterPitch()
+int Tonic::getCenterPitch() const
 {
   return (mBase * 12) + mPitch;
 }

@@ -1,25 +1,22 @@
 #include "../include/StructureControl.h"
 
-#include "../include/Logger.h"
+StructureControl::StructureControl(std::shared_ptr<INoteCollection> structure, std::string id)
+  : mNoteCollection(structure), mControlID(id){}
 
-#define LOC "structure"
-
-StructureControl::StructureControl(std::shared_ptr<IAbsoluteNoteRule> structure, std::string id)
-  : mNoteRule(structure), mControlID(id){}
-
-void StructureControl::addControl(StructureControl* structureControl, RuleEnvironment& ruleEnvironment)
+void StructureControl::addControl(std::weak_ptr<StructureControl> structureControl)
 {
-  Logger::instance().log(LOC, "ADDED: " + mControlID + " -> " + structureControl->mControlID);
-  ruleEnvironment.addFulfillment(mControlID, structureControl);
+  mControls.push_back(structureControl);
 }
 
-IAbsoluteNoteRule& StructureControl::getNoteRule() const
+INoteCollection& StructureControl::getNoteCollection() const
 {
-  Logger::instance().log(LOC, "USING: " + mControlID);
-  return *mNoteRule;
+  return *mNoteCollection;
 }
 
-StructureControl& StructureControl::getNext(RuleEnvironment& ruleEnvironment) const
+std::shared_ptr<StructureControl> StructureControl::getNext() const
 {
-  return *ruleEnvironment.getRule<StructureControl>(mControlID);
+  unsigned int choice = rand() % mControls.size();
+  auto controlIt = mControls.begin();
+  std::advance(controlIt, choice);
+  return (*controlIt).lock();
 }

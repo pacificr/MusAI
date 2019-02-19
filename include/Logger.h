@@ -12,7 +12,7 @@ class Logger
   public:
     static Logger& instance();
     void enable(std::string location);
-    void log(std::string location, std::string message);
+    void log(std::string location, std::string message) const;
 
     Logger(Logger const&) = delete;
     void operator=(Logger const&) = delete;

@@ -2,7 +2,7 @@
 #include <string>
 #include <bitset>
 
-std::string MIDISignal::getRaw()
+std::string MIDISignal::getRaw() const
 {
     std::string output = std::to_string(mTime);
     output += " ";

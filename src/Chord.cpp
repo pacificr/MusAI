@@ -6,7 +6,7 @@ Chord::Chord(std::vector<int> chordDegrees, bool useScale)
   mUseScale = useScale;
 }
 
-int Chord::resolveDegree(int index, Scale& scale)
+int Chord::resolveDegree(int index, Scale& scale) const
 {
   int M = mChordDegrees.size();
   int degree = mChordDegrees.at(((index % M) + M ) % M);

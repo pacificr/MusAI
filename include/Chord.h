@@ -11,6 +11,6 @@ class Chord
   public:
     bool mUseScale;
 
-    Chord(std::vector<int>, bool useScale = true);
-    int resolveDegree(int, Scale&);
+    Chord(const std::vector<int>, bool useScale = true);
+    int resolveDegree(int, Scale&) const;
 };

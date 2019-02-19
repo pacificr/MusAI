@@ -19,9 +19,7 @@
         console.log('Testing');
 
         var theme = new Module.Theme();
-        var p = new Module.StructuredGeneratorBuilder();
 
-        theme.addRule(p);
         generator = theme.getGenerator();
 
         synth = new Tone.PolySynth(5, Tone.Synth).toMaster();

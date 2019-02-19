@@ -5,7 +5,7 @@ Scale::Scale(std::vector<int> scaleDegrees)
   mScaleDegrees = scaleDegrees;
 }
 
-int Scale::resolveDegree(int index)
+int Scale::resolveDegree(int index) const
 {
   int M = mScaleDegrees.size();
   int degree = mScaleDegrees.at(((index % M) + M) %M);
@@ -15,7 +15,7 @@ int Scale::resolveDegree(int index)
   return degree + octave * 12;
 }
 
-unsigned int Scale::size()
+unsigned int Scale::size() const
 {
   return mScaleDegrees.size();
 }

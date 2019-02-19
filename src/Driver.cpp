@@ -22,9 +22,8 @@ int main(int argc, char* argv[])
   } 
 
   Theme theme;
-  StructuredGeneratorBuilder p;
-  theme.addRule(p);
-  IGenerator* generator = theme.getGenerator();
+
+  auto generator = theme.getGenerator();
 
   MIDIStream stream = generator->getNext(16);
 
@@ -33,8 +32,6 @@ int main(int argc, char* argv[])
     logger.log(LOC, std::to_string(stream.getNext().mKey));
     stream.getNext();
   }
-
-  delete generator;
 
   return 0;
 }

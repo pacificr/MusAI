@@ -1,22 +1,22 @@
 #pragma once
 
-#include "IAbsoluteNoteRule.h"
+#include "INoteCollection.h"
+#include "BuilderSet.h"
 
 #include <memory>
-#include <vector>
+#include <set>
 
-class StructureControl : public IRule
+class StructureControl
 {
 private:
-  std::shared_ptr<IAbsoluteNoteRule> mNoteRule;
+  std::vector<std::weak_ptr<StructureControl>> mControls;
+  std::shared_ptr<INoteCollection> mNoteCollection;
   std::string mControlID;
 public:
-  StructureControl(std::shared_ptr<IAbsoluteNoteRule>, std::string);
+  StructureControl(std::shared_ptr<INoteCollection>, std::string);
 
-  virtual void describe(RuleEnvironment&){};
+  void addControl(std::weak_ptr<StructureControl>);
 
-  void addControl(StructureControl*, RuleEnvironment&);
-
-  IAbsoluteNoteRule& getNoteRule() const;
-  StructureControl& getNext(RuleEnvironment&) const;
+  INoteCollection& getNoteCollection() const;
+  std::shared_ptr<StructureControl> getNext() const;
 };

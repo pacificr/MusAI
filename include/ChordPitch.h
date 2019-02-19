@@ -6,5 +6,5 @@ class ChordPitch : public IPitch
 {
   public:
     ChordPitch(int = 0);
-    int resolve(Scale&, Chord&);
+    int resolve(Scale&, Chord&) const;
 };

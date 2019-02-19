@@ -17,9 +17,9 @@ template <typename T> class TimelineTrack
         mBuckets.push_back(bucket);
     }
 
-    std::shared_ptr<T> getObject(int beat)
+    std::shared_ptr<T> getObject(int beat) const
     {
-      std::shared_ptr<T> result = NULL;
+      std::shared_ptr<T> result = nullptr;
 
       for (TimelineBucket<T> bucket : mBuckets)
         if (bucket.matches(beat))
