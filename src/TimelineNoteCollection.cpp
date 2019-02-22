@@ -21,5 +21,5 @@ std::vector<Note> TimelineNoteCollection::getNotes() const
 
 double TimelineNoteCollection::getLength() const
 {
-  return 10;
+  return mTimeline->getLength();
 }

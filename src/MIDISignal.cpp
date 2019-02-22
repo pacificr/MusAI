@@ -18,3 +18,23 @@ std::string MIDISignal::getRaw() const
 
     return output;
 }
+
+std::string MIDISignal::getNoteName()
+{
+  std::string names[] = {
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B"
+  };
+
+  return names[mKey % 12] + std::to_string(mKey / 12);
+}

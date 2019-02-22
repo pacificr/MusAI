@@ -3,7 +3,7 @@
 #include "../include/Logger.h"
 #define LOC "timeline"
 
-Timeline::Timeline()
+Timeline::Timeline(int numBeats) : mNumBeats(numBeats)
 {
   addTrackNow("default");
 }
@@ -25,11 +25,6 @@ void Timeline::addTrack(std::string track)
     mTracks.insert(track);
     addTrackNow(track);
   }
-}
-
-std::set<std::string> Timeline::getTracks() const
-{
-  return mTracks;
 }
 
 void Timeline::add(std::shared_ptr<Tempo> tempo, std::string track, int begin, int end)
@@ -60,6 +55,20 @@ void Timeline::add(std::shared_ptr<PitchCollection> pitches, std::string track, 
 void Timeline::add(std::shared_ptr<Rhythm> rhythm, std::string track, int begin, int end)
 {
   mRhythms.at(track).add(TimelineBucket<Rhythm>(rhythm, begin, end));
+}
+
+std::set<std::string> Timeline::getTracks() const
+{
+  return mTracks;
+}
+
+double Timeline::getLength(std::string track) const
+{
+  std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject();
+  if (NULL == tempo)
+    tempo = mTempos.at("default").getObject();
+
+  return tempo->applyTempo(mNumBeats);
 }
 
 std::vector<Note> Timeline::getNotes(std::string track)
@@ -101,23 +110,26 @@ std::vector<Note> Timeline::getNotes(std::string track)
     if (NULL == tonic)
       tonic = mTonics.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
-    Note note(
-        tonic->getCenterPitch() + pitches->getPitch(currentPitch).resolve(*scale, *chord),
-        tempo->applyTempo(
-          double(currentBeat)
+    double start = tempo->applyTempo(
+        double(currentBeat)
           + double(rhythmicNote.mStartBeat)
           + (double(rhythmicNote.mStartValue) / double(rhythmicNote.mStartSubdivision))
-        ),
-        tempo->applyTempo(double(rhythmicNote.mValue) / double(rhythmicNote.mSubdivision))
     );
 
-    logger.log(LOC, "adding note on track " + track
-        + " " + std::to_string(note.mKey)
-        + " " + std::to_string(note.mTime)
-        + " " + std::to_string(note.mDuration)
-        + " " + std::to_string(note.mVelocity)
-    );
-    notes.push_back(note);
+    double length = tempo->applyTempo(double(rhythmicNote.mValue) / double(rhythmicNote.mSubdivision));
+
+    for (int pitch : pitches->getUnison(currentPitch).resolve(*scale, *chord))
+    {
+      Note note(tonic->getCenterPitch() + pitch, start, length);    
+
+      logger.log(LOC, "adding note on track " + track
+          + " " + std::to_string(note.mKey)
+          + " " + std::to_string(note.mTime)
+          + " " + std::to_string(note.mDuration)
+          + " " + std::to_string(note.mVelocity)
+      );
+      notes.push_back(note);
+    }
 
     ++currentPitch;
   }

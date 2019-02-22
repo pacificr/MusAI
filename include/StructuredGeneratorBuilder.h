@@ -1,8 +1,8 @@
 #pragma once
 
 #include "IBuilder.h"
-
 #include "IGenerator.h"
+
 #include "BuilderSet.h"
 #include "INoteCollection.h"
 

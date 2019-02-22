@@ -1,11 +1,12 @@
 #include "../include/PitchCollection.h"
 
-void PitchCollection::add(std::shared_ptr<IPitch> pitch)
+PitchCollection& PitchCollection::add(std::shared_ptr<Unison> pitch)
 {
   mPitches.push_back(pitch);
+  return *this;
 }
 
-IPitch& PitchCollection::getPitch(int index) const
+Unison& PitchCollection::getUnison(int index) const
 {
   int M = mPitches.size();
   return *mPitches.at(((index % M) + M) % M);

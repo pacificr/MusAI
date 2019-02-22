@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
   while (stream.hasNext())
   {
-    logger.log(LOC, std::to_string(stream.getNext().mKey));
+    logger.log(LOC, stream.getNext().getNoteName());
     stream.getNext();
   }
 

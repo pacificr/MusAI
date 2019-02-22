@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IPitch.h"
+#include "Unison.h"
 
 #include <memory>
 #include <vector>
@@ -8,8 +8,8 @@
 class PitchCollection
 {
   private:
-    std::vector<std::shared_ptr<IPitch>> mPitches;
+    std::vector<std::shared_ptr<Unison>> mPitches;
   public:
-    void add(std::shared_ptr<IPitch>);
-    IPitch& getPitch(int) const;
+    PitchCollection& add(std::shared_ptr<Unison>);
+    Unison& getUnison(int) const;
 };

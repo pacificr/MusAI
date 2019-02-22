@@ -10,7 +10,8 @@ class Rhythm
     std::vector<RhythmicNote> mRhythmicNotes;
     int mLength;
   public:
-    Rhythm(std::vector<RhythmicNote>, int);
+    Rhythm(int);
+    void add(RhythmicNote);
     std::vector<RhythmicNote> getNotes() const;
     int getLength() const;
 };

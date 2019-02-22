@@ -5,6 +5,7 @@
 class ChordPitch : public IPitch
 {
   public:
-    ChordPitch(int = 0);
+    ChordPitch(int value = 0, int octave = 0)
+      :IPitch(value, octave){};
     int resolve(Scale&, Chord&) const;
 };

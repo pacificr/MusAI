@@ -1,7 +1,12 @@
 #include "../include/Rhythm.h"
 
-Rhythm::Rhythm(std::vector<RhythmicNote> notes, int length)
-  : mRhythmicNotes(notes), mLength(length){}
+Rhythm::Rhythm(int length)
+  : mLength(length){}
+
+void Rhythm::add(RhythmicNote note)
+{
+  mRhythmicNotes.push_back(note);
+}
 
 std::vector<RhythmicNote> Rhythm::getNotes() const
 {

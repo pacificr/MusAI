@@ -17,6 +17,7 @@ class Timeline
 {
   private:
     std::set<std::string> mTracks;
+    int mNumBeats;
 
     std::map<std::string, TimelineTrack<Tempo>> mTempos;
     std::map<std::string, TimelineTrack<Tonic>> mTonics;
@@ -27,10 +28,9 @@ class Timeline
 
     void addTrackNow(std::string);
   public:
-    Timeline();
-    void addTrack(std::string);
-    std::set<std::string> getTracks() const;
+    Timeline(int length);
 
+    void addTrack(std::string);
     void add(std::shared_ptr<Tempo>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Tonic>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Scale>, std::string track = "default", int startBeat = -1, int endBeat = -1);
@@ -38,5 +38,7 @@ class Timeline
     void add(std::shared_ptr<PitchCollection>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Rhythm>, std::string track = "default", int startBeat = -1, int endBeat = -1);
 
+    std::set<std::string> getTracks() const;
+    double getLength(std::string track = "default") const;
     std::vector<Note> getNotes(std::string track);
 };

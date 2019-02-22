@@ -12,4 +12,5 @@ public:
     double mTime = 0;
 
     std::string getRaw() const;
+    std::string getNoteName();
 };
