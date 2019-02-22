@@ -6,7 +6,7 @@
 std::shared_ptr<IIngredient> MelodySequenceIngredientBuilder::build()
 {
   int pitch = mStartingPitch;
-  std::shared_ptr<PitchCollection> pc = std::make_shared<PitchCollection>();
+  std::shared_ptr<PitchSequence> pc = std::make_shared<PitchSequence>();
   std::shared_ptr<Rhythm> rhythm = std::make_shared<Rhythm>(16);
   for (unsigned int i = 0; i < mNumNotes; ++i)
   {

@@ -13,4 +13,5 @@ class Chord
 
     Chord(const std::vector<int>, bool useScale = true);
     int resolveDegree(int, Scale&) const;
+    unsigned int size() const;
 };

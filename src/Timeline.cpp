@@ -14,7 +14,7 @@ void Timeline::addTrackNow(std::string track)
   mTonics.insert(std::pair<std::string, TimelineTrack<Tonic>>(track, TimelineTrack<Tonic>()));
   mScales.insert(std::pair<std::string, TimelineTrack<Scale>>(track, TimelineTrack<Scale>()));
   mChords.insert(std::pair<std::string, TimelineTrack<Chord>>(track, TimelineTrack<Chord>()));
-  mPitchCollections.insert(std::pair<std::string, TimelineTrack<PitchCollection>>(track, TimelineTrack<PitchCollection>()));
+  mPitchSequences.insert(std::pair<std::string, TimelineTrack<PitchSequence>>(track, TimelineTrack<PitchSequence>()));
   mRhythms.insert(std::pair<std::string, TimelineTrack<Rhythm>>(track, TimelineTrack<Rhythm>()));
 }
 
@@ -47,9 +47,9 @@ void Timeline::add(std::shared_ptr<Chord> chord, std::string track, int begin, i
   mChords.at(track).add(TimelineBucket<Chord>(chord, begin, end));
 }
 
-void Timeline::add(std::shared_ptr<PitchCollection> pitches, std::string track, int begin, int end)
+void Timeline::add(std::shared_ptr<PitchSequence> pitches, std::string track, int begin, int end)
 {
-  mPitchCollections.at(track).add(TimelineBucket<PitchCollection>(pitches, begin, end));
+  mPitchSequences.at(track).add(TimelineBucket<PitchSequence>(pitches, begin, end));
 }
 
 void Timeline::add(std::shared_ptr<Rhythm> rhythm, std::string track, int begin, int end)
@@ -85,9 +85,9 @@ std::vector<Note> Timeline::getNotes(std::string track)
 
   for (RhythmicNote rhythmicNote : rhythm->getNotes())
   {
-    std::shared_ptr<PitchCollection> pitches = mPitchCollections.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
     if (NULL == pitches)
-      pitches = mPitchCollections.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      pitches = mPitchSequences.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
 
     /*if (&pitchCollection != oldPitchCollection) compare starting beats of pitch collection stored in Timeline
     {

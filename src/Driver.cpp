@@ -3,7 +3,6 @@
 #include "../include/StructuredGeneratorBuilder.h"
 #include "../include/ScalePitch.h"
 #include "../include/ChordPitch.h"
-#include "../include/PitchCollection.h"
 
 #include "../include/Logger.h"
 #define LOC "driver"

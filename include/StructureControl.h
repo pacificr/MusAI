@@ -11,9 +11,8 @@ class StructureControl
 private:
   std::vector<std::weak_ptr<StructureControl>> mControls;
   std::shared_ptr<INoteCollection> mNoteCollection;
-  std::string mControlID;
 public:
-  StructureControl(std::shared_ptr<INoteCollection>, std::string);
+  StructureControl(std::shared_ptr<INoteCollection>);
 
   void addControl(std::weak_ptr<StructureControl>);
 

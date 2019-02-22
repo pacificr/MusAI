@@ -1,7 +1,7 @@
 #include "../include/StructureControl.h"
 
-StructureControl::StructureControl(std::shared_ptr<INoteCollection> structure, std::string id)
-  : mNoteCollection(structure), mControlID(id){}
+StructureControl::StructureControl(std::shared_ptr<INoteCollection> structure)
+  : mNoteCollection(structure){}
 
 void StructureControl::addControl(std::weak_ptr<StructureControl> structureControl)
 {

@@ -5,11 +5,11 @@
 #include <memory>
 #include <vector>
 
-class PitchCollection
+class PitchSequence
 {
   private:
     std::vector<std::shared_ptr<Unison>> mPitches;
   public:
-    PitchCollection& add(std::shared_ptr<Unison>);
+    PitchSequence& add(std::shared_ptr<Unison>);
     Unison& getUnison(int) const;
 };

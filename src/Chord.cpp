@@ -23,3 +23,8 @@ int Chord::resolveDegree(int index, Scale& scale) const
     return degree + limit * 12;
   }
 }
+
+unsigned int Chord::size() const
+{
+  return mChordDegrees.size();
+}
