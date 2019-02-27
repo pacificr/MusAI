@@ -1,6 +1,7 @@
 #include "../include/MIDISignal.h"
-#include "../include/Theme.h"
+#include "../include/ThemeFactory.h"
 #include "../include/IGenerator.h"
+
 #include <emscripten/bind.h>
 
 using namespace emscripten;
@@ -28,7 +29,9 @@ EMSCRIPTEN_BINDINGS(music_library)
     ;
 
     class_<Theme>("Theme")
-      .constructor()
-      .function("getGenerator", &Theme::getGenerator, allow_raw_pointers())
+      .smart_ptr<std::shared_ptr<Theme>>("Theme")
+      .function("getGenerator", &Theme::getGenerator)
     ;
+
+    function ("getTheme", &MusAI::getTheme);
 }

@@ -7,9 +7,13 @@
 #include "../include/Logger.h"
 #define LOC "structure"
 
-StructuredGeneratorBuilder::StructuredGeneratorBuilder()
+StructuredGeneratorBuilder::StructuredGeneratorBuilder(unsigned int minSections, unsigned int maxSections)
+  : mMinSections(minSections), mMaxSections(maxSections){};
+
+StructuredGeneratorBuilder& StructuredGeneratorBuilder::addNoteCollectionBuilder(std::shared_ptr<IBuilder<INoteCollection>> builder)
 {
-  mNoteCollection.add(std::make_shared<TimelineNoteCollectionBuilder>());
+  mNoteCollection.add(builder);
+  return *this;
 }
 
 std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
@@ -19,7 +23,6 @@ std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
   if (mMinSections < 1)
     mMinSections = 1;
 
-  mMaxSections = 1;//TEMPORARY
   int numSections = (rand() % (mMaxSections - mMinSections + 1)) + mMinSections;
   int sectionsToBuild = numSections - 1;
   int current = 0;
@@ -28,35 +31,22 @@ std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
 
   std::vector<std::shared_ptr<StructureControl>> sections;
   sections.resize(numSections);
-
-  std::string id = std::to_string(rand());
   
-  sections[current] = std::make_shared<StructureControl>(mNoteCollection.get(), id);
-  /*sections[current] = new StructureControl(
-    new BasicAbsoluteNoteRule(id),
-    id
-  );
-  ruleEnvironment.addBuilds("Melody_" + id, melodyBuilder);*/
+  sections[current] = std::make_shared<StructureControl>(mNoteCollection.get());
 
   if (sectionsToBuild <= 0)
     sections[current]->addControl(sections[current]);
   else
   {
     for (int i = 1; i < numSections; ++i)
-      sections[i] = NULL;
+      sections[i] = nullptr;
 
     while(sectionsToBuild > 0 || current != 0)
     {
       int selection = rand() % numSections;
-      if(sections[selection] == NULL)
+      if(sections[selection] == nullptr)
       {
-        id = std::to_string(rand());
-        sections[current] = std::make_shared<StructureControl>(mNoteCollection.get(), id);
-        /*sections[selection] = new StructureControl(
-          new BasicAbsoluteNoteRule(id),
-          id
-        );
-        ruleEnvironment.addBuilds("Melody_" + id, melodyBuilder);*/
+        sections[selection] = std::make_shared<StructureControl>(mNoteCollection.get());
         --sectionsToBuild;
       }
       sections[current]->addControl(sections[selection]);

@@ -1,8 +1,7 @@
 
-#include "../include/Theme.h"
+#include "../include/ThemeFactory.h"
 #include "../include/StructuredGeneratorBuilder.h"
-#include "../include/ScalePitch.h"
-#include "../include/ChordPitch.h"
+#include "../include/TimelineNoteCollectionBuilder.h"
 
 #include "../include/Logger.h"
 #define LOC "driver"
@@ -12,17 +11,15 @@
 
 int main(int argc, char* argv[])
 {
-  srand(time(NULL));
-
   Logger& logger = Logger::instance();
   for (int i = 1; i < argc; ++i)
   {
     logger.enable(argv[i]);
   } 
 
-  Theme theme;
+  std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\": [{\"builder\": \"StructuredGeneratorBuilder\",\"minSections\": 2,\"maxSections\": 3,\"noteCollection\": [{\"builder\": \"TimelineNoteCollectionBuilder\"}]}]}");
 
-  auto generator = theme.getGenerator();
+  std::shared_ptr<IGenerator> generator = theme->getGenerator();
 
   MIDIStream stream = generator->getNext(16);
 

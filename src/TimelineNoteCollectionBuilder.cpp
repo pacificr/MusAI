@@ -32,6 +32,7 @@ std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
   timeline->add(scale);
 
   mProgression.get()->apply(*timeline);
+  mMelody.randomize();
   mMelody.get()->apply(*timeline);
   mHarmony.get()->apply(*timeline);
 

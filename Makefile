@@ -1,4 +1,4 @@
-.PHONY: clean cpp js
+.PHONY: clean cpp js valgrind
 
 CC = g++
 EM_CC = emcc --bind
@@ -34,4 +34,4 @@ js/%.o: src/%.cpp
 	$(EM_CC) -c $(CC_FLAGS) $< -o $@
 
 clean:
-	rm -f bin/* js/*
+	rm -f bin/* js/* vgcore.*

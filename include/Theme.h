@@ -8,6 +8,6 @@ class Theme
   private:
     BuilderSet<IGenerator> mGenerator;
   public:
-    Theme();
+    Theme& addGeneratorBuilder(std::shared_ptr<IBuilder<IGenerator>>);
     std::shared_ptr<IGenerator> getGenerator();
 };

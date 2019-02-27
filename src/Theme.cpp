@@ -4,9 +4,10 @@
 
 #include <time.h>
 
-Theme::Theme()
+Theme& Theme::addGeneratorBuilder(std::shared_ptr<IBuilder<IGenerator>> builder)
 {
-  mGenerator.add(std::make_shared<StructuredGeneratorBuilder>());
+  mGenerator.add(builder);
+  return *this;
 }
 
 std::shared_ptr<IGenerator> Theme::getGenerator()

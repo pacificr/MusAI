@@ -18,7 +18,7 @@
       onRuntimeInitialized: function() {
         console.log('Testing');
 
-        var theme = new Module.Theme();
+        var theme = Module.getTheme("{\"generator\": [{\"builder\": \"StructuredGeneratorBuilder\",\"minSections\": 2,\"maxSections\": 3,\"noteCollection\": [{\"builder\": \"TimelineNoteCollectionBuilder\"}]}]}");
 
         generator = theme.getGenerator();
 
