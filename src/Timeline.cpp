@@ -20,7 +20,7 @@ void Timeline::addTrackNow(std::string track)
 
 void Timeline::addTrack(std::string track)
 {
-  if (mTracks.find(track) == mTracks.end())
+  if (mTracks.find(track) == mTracks.end() && track != "default")
   {
     mTracks.insert(track);
     addTrackNow(track);

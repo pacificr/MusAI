@@ -5,15 +5,20 @@
 #include "../include/MelodySequenceIngredientBuilder.h"
 #include "../include/HarmonySequenceIngredientBuilder.h"
 
-TimelineNoteCollectionBuilder::TimelineNoteCollectionBuilder()
+void TimelineNoteCollectionBuilder::addIngredientBuilderSet(std::string track, std::shared_ptr<BuilderSet<IIngredient>> ingredientBuilderSet)
 {
-  mProgression.add(std::make_shared<ProgressionIngredientBuilder>());
-  mMelody.add(std::make_shared<MelodySequenceIngredientBuilder>());
-  mHarmony.add(std::make_shared<HarmonySequenceIngredientBuilder>());
+  mIngredients.insert(std::pair<std::string, std::shared_ptr<BuilderSet<IIngredient>>>(track, ingredientBuilderSet));
 }
 
 std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
-{  
+{
+  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>(16);
+  for (auto trackIngredient : mIngredients)
+  {
+    timeline->addTrack(trackIngredient.first);
+    trackIngredient.second->get()->apply(*timeline, trackIngredient.first);
+  }
+
   std::vector<int> sd;
   sd.push_back(0);
   sd.push_back(2);
@@ -24,17 +29,9 @@ std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
   sd.push_back(11);
   std::shared_ptr<Scale> scale = std::make_shared<Scale>(sd);
  
-  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>(16);
-  timeline->addTrack("melody");
-  timeline->addTrack("harmony");
   timeline->add(std::make_shared<Tempo>(Tempo(80)));
   timeline->add(std::make_shared<Tonic>(Tonic(0)));
   timeline->add(scale);
-
-  mProgression.get()->apply(*timeline);
-  mMelody.randomize();
-  mMelody.get()->apply(*timeline);
-  mHarmony.get()->apply(*timeline);
 
   return std::make_shared<TimelineNoteCollection>(timeline);
 }

@@ -12,5 +12,5 @@ class ProgressionIngredient : public IIngredient
     std::vector<std::pair<std::shared_ptr<Chord>, int>> mChords;
   public:
     void pushChord(std::shared_ptr<Chord>, int); 
-    void apply(Timeline&) const;
+    void apply(Timeline&, std::string);
 };

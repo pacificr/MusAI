@@ -16,5 +16,5 @@ std::shared_ptr<IIngredient> MelodySequenceIngredientBuilder::build()
     rhythm->add(RhythmicNote(1, 1, i));
   }
 
-  return std::make_shared<SequenceIngredient>(pc, rhythm, "melody");
+  return std::make_shared<SequenceIngredient>(pc, rhythm);
 }

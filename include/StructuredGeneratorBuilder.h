@@ -6,8 +6,6 @@
 #include "BuilderSet.h"
 #include "INoteCollection.h"
 
-#include <iostream>
-
 class StructuredGeneratorBuilder : public IBuilder<IGenerator>
 {
 private:

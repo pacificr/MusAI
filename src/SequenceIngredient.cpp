@@ -1,10 +1,10 @@
 #include "../include/SequenceIngredient.h"
 
-SequenceIngredient::SequenceIngredient(std::shared_ptr<PitchSequence> pc, std::shared_ptr<Rhythm> r, std::string track)
-  : mPitchSequence(pc), mRhythm(r), mTrack(track){}
+SequenceIngredient::SequenceIngredient(std::shared_ptr<PitchSequence> pc, std::shared_ptr<Rhythm> r)
+  : mPitchSequence(pc), mRhythm(r){}
 
-void SequenceIngredient::apply(Timeline& timeline) const
+void SequenceIngredient::apply(Timeline& timeline, std::string track)
 {
-  timeline.add(mPitchSequence, mTrack);
-  timeline.add(mRhythm, mTrack);
+  timeline.add(mPitchSequence, track);
+  timeline.add(mRhythm, track);
 }

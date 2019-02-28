@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     logger.enable(argv[i]);
   } 
 
-  std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\": [{\"builder\": \"StructuredGeneratorBuilder\",\"minSections\": 2,\"maxSections\": 3,\"noteCollection\": [{\"builder\": \"TimelineNoteCollectionBuilder\"}]}]}");
+  std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}]]}}]}]}");
 
   std::shared_ptr<IGenerator> generator = theme->getGenerator();
 

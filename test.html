@@ -18,7 +18,7 @@
       onRuntimeInitialized: function() {
         console.log('Testing');
 
-        var theme = Module.getTheme("{\"generator\": [{\"builder\": \"StructuredGeneratorBuilder\",\"minSections\": 2,\"maxSections\": 3,\"noteCollection\": [{\"builder\": \"TimelineNoteCollectionBuilder\"}]}]}");
+        var theme = Module.getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}]]}}]}]}");
 
         generator = theme.getGenerator();
 

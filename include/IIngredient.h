@@ -6,5 +6,5 @@ class IIngredient
 {
   public:
     virtual ~IIngredient() = default;
-    virtual void apply(Timeline&) const = 0;
+    virtual void apply(Timeline&, std::string) = 0;
 };
