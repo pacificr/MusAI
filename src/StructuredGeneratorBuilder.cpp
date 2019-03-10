@@ -46,6 +46,7 @@ std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
       int selection = rand() % numSections;
       if(sections[selection] == nullptr)
       {
+        mNoteCollection.randomize();
         sections[selection] = std::make_shared<StructureControl>(mNoteCollection.get());
         --sectionsToBuild;
       }

@@ -28,4 +28,8 @@ template <typename T> class BuilderSet
         randomize();
       return mObject;
     }
+    unsigned int size()
+    {
+      return mSet.size();
+    }
 };

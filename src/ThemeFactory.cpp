@@ -5,6 +5,8 @@
 #include "../include/MelodySequenceIngredientBuilder.h"
 #include "../include/HarmonySequenceIngredientBuilder.h"
 #include "../include/ProgressionIngredientBuilder.h"
+#include "../include/ScaleIngredientBuilder.h"
+#include "../include/CustomScaleIngredientBuilder.h"
 
 #include <json.hpp>
 
@@ -35,6 +37,27 @@ namespace MusAI
       auto builder = std::make_shared<ProgressionIngredientBuilder>();
       return builder;
     }
+    else if ("ScaleIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<ScaleIngredientBuilder>();
+      
+      auto const scale = j.find("scale");
+      if (scale != j.end())
+        builder->mScaleTitle = *scale;
+
+      return builder;
+    }
+    else if ("CustomScaleIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<CustomScaleIngredientBuilder>();
+
+      auto const degreeArray = j.find("degrees");
+      if (degreeArray != j.end())
+        for (auto const& degree : *degreeArray)
+          builder->mDegrees.push_back(degree);
+
+      return builder;
+    }
 
     logger.log(LOC, "Ingredient fail");
     return nullptr;
@@ -43,9 +66,8 @@ namespace MusAI
   std::shared_ptr<BuilderSet<IIngredient>> getIngredientBuilderSet(const json& j)
   {
     std::shared_ptr<BuilderSet<IIngredient>> builderSet = std::make_shared<BuilderSet<IIngredient>>();
-    for (auto const& builderArray : j)
-      for (auto const& builder : builderArray)
-        builderSet->add(getIngredientBuilder(builder));
+    for (auto const& builder : j)
+      builderSet->add(getIngredientBuilder(builder));
     return builderSet;
   }
 
@@ -60,7 +82,8 @@ namespace MusAI
       auto const ingredients = j.find("ingredients");
       if (ingredients != j.end())
         for (auto& track : ingredients->items())
-          timelineNoteCollectionBuilder->addIngredientBuilderSet(track.key(), getIngredientBuilderSet(track.value()));
+          for (auto const& builderArray : track.value())
+            timelineNoteCollectionBuilder->addIngredientBuilderSet(track.key(), getIngredientBuilderSet(builderArray));
       return timelineNoteCollectionBuilder;
     }
 
@@ -85,7 +108,6 @@ namespace MusAI
         structuredGeneratorBuilder->mMaxSections = *maxSections; 
 
       auto const noteCollectionArray = j.find("noteCollection");
-
       if (noteCollectionArray == j.end())
         logger.log(LOC, "note collection not found, use default");
       else

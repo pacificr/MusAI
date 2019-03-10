@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     logger.enable(argv[i]);
   } 
 
-  std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}]]}}]}]}");
+  std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}],[{\"type\":\"CustomScaleIngredientBuilder\",\"degrees\":[0,1,2,3]},{\"type\":\"ScaleIngredientBuilder\",\"scale\":\"whole tone\"}]]}}]}]}");
 
   std::shared_ptr<IGenerator> generator = theme->getGenerator();
 
