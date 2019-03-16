@@ -1,81 +1,23 @@
 <!doctype html>
 <meta charset="UTF-8"> 
 <html>
-  <button onclick="go()">Go</button>
+  <head>
+    <link rel="stylesheet" type="text/css" href="web/style.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://tonejs.github.io/build/Tone.js"></script>
+    <script src="web/frontend.js"></script>
+  </head>
+  <button onclick="play(JSON.stringify(getTheme($('#root'))))">Go</button>
+  <button onclick="console.log(getTheme($('#root')));">Test</button>
+  <button onclick="console.log(JSON.stringify(getTheme($('#root'))))">Test string</button>
   <p id="test"></p>
-  <script src="https://tonejs.github.io/build/Tone.js"></script>
+  <div id="root" class="boxed"></div> 
   <script>
-    var generator;
-    var synth;
-    var synth2;
-    var g = true;
-
-    var nextUpdate = 0.0;
-    var increment = 1.0;
-    var lookAhead = 1.0;
-
     var Module = {
-      onRuntimeInitialized: function() {
-        console.log('Testing');
-
-        var theme = Module.getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}],[{\"type\":\"CustomScaleIngredientBuilder\",\"degrees\":[0, 3, 6, 9]},{\"type\":\"ScaleIngredientBuilder\",\"scale\":\"major\"}]]}}]}]}");
-
-        generator = theme.getGenerator();
-
-        synth = new Tone.PolySynth(5, Tone.Synth).toMaster();
-
-        console.log('Start');
-        updateTime()
-      }
-    };
-
-    function go()
-    {
-      g = false;
-      console.log("Stopping");
-    }
-
-    function scheduleNote(note, duration)
-    {
-      synth.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 1);
-    }
-
-    function updateTime(){
-      if (g)
-      {
-        requestAnimationFrame(updateTime);
-      }
-      document.getElementById("test").innerHTML = Tone.now().toFixed(3);
-
-      if (Tone.now() >= nextUpdate)
-      {
-        var currentTime = Tone.now();
-        nextUpdate = currentTime + increment;
-        var stream = generator.getNext(nextUpdate + lookAhead);
-        var notes = [];
-
-        while(stream.hasNext())
-        {
-          var note = stream.getNext();
-          if (note.isNoteOn)
-          {
-            notes.push(note);
-          }
-          else
-          {
-            for (var i = 0; i < notes.length; ++i)
-            {
-              if (notes[i].key == note.key && notes[i].channel == note.channel)
-              {
-                scheduleNote (notes[i], note.time - notes[i].time);
-                //if (note.time - notes[i].time < 2)
-                  //console.log(note.key);
-                notes.splice(i, 1);
-                break;
-              }
-            }
-          }
-        }
+      onRuntimeInitialized: function(){
+        setModule(Module);
+        setTone(Tone);
+        displayTheme($("#root"), JSON.parse("{\"type\":\"Theme\"}"));
       }
     }
 
