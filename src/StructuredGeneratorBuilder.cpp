@@ -7,9 +7,6 @@
 #include "../include/Logger.h"
 #define LOC "structure"
 
-StructuredGeneratorBuilder::StructuredGeneratorBuilder(unsigned int minSections, unsigned int maxSections)
-  : mMinSections(minSections), mMaxSections(maxSections){};
-
 StructuredGeneratorBuilder& StructuredGeneratorBuilder::addNoteCollectionBuilder(std::shared_ptr<IBuilder<INoteCollection>> builder)
 {
   mNoteCollection.add(builder);
@@ -56,4 +53,12 @@ std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
   }
 
   return std::make_shared<StructuredGenerator>(sections);
+}
+
+void StructuredGeneratorBuilder::registerWith(Describer& describer)
+{
+  describer.registerBuilder("GeneratorBuilder", "StructuredGeneratorBuilder", "Structured Generator");
+  describer.registerIntRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "minSections", "Min Sections", 1);
+  describer.registerIntRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "maxSections", "Max Sections", 3);
+  describer.registerBuilderRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "NoteCollectionBuilder", "noteCollection", "Note Collection");
 }

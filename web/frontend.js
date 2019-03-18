@@ -4,10 +4,7 @@ var generator;
 var synth;
 var g = true;
 
-var builders = JSON.parse("{\"Theme\":{\"Theme\":{\"display\":\"Theme\",\"requirements\":[{\"type\":\"GeneratorBuilder\",\"attribute\":\"generator\",\"display\":\"Generator\"}]}},\"GeneratorBuilder\":{\"StructuredGeneratorBuilder\":{\"display\":\"StructuredGenerator\",\"requirements\":[{\"type\":\"int\",\"attribute\":\"minSections\",\"display\":\"MinSections\",\"default\":\"1\"},{\"type\":\"int\",\"attribute\":\"maxSections\",\"display\":\"MaxSections\",\"default\":\"3\"},{\"type\":\"NoteCollectionBuilder\",\"attribute\":\"noteCollection\",\"display\":\"NoteCollection\"}]}},\"NoteCollectionBuilder\":{\"TimelineNoteCollectionBuilder\":{\"display\":\"TimelineNoteCollection\",\"requirements\":[{\"type\":\"map\",\"attribute\":\"ingredients\",\"display\":\"Tracks\",\"defaultElement\":true,\"requirement\":{\"type\":\"IngredientBuilder\",\"display\":\"Ingredient\"}}]}},\"IngredientBuilder\":{\"ProgressionIngredientBuilder\":{\"display\":\"ProgressionIngredient\",\"requirements\":[]},\"MelodySequenceIngredientBuilder\":{\"display\":\"MelodySequenceIngredient\",\"requirements\":[]},\"HarmonySequenceIngredientBuilder\":{\"display\":\"HarmonySequenceIngredient\",\"requirements\":[]},\"CustomScaleIngredientBuilder\":{\"display\":\"CustomScaleIngredient\",\"requirements\":[]},\"ScaleIngredientBuilder\":{\"display\":\"ScaleIngredient\",\"requirements\":[{\"type\":\"choice\",\"attribute\":\"scale\",\"display\":\"Scale\",\"choices\":[\"major\",\"minor\"]}]}}}");
-
-var currentNode;
-var currentRoot;
+var builders;
 
 var nextUpdate = 0.0;
 var increment = 1.0;
@@ -22,6 +19,11 @@ function setTone(tone)
 {
   Tone = tone;
   synth = new Tone.PolySynth(5, Tone.Synth).toMaster();
+}
+
+function setBuilders(b)
+{
+  builders = JSON.parse(b);
 }
 
 function play(data)
@@ -135,7 +137,7 @@ function parseRequirement(requirement, node)
       {
         if (map.hasOwnProperty(index) && index)
         {
-          data += "<p>Track: <input type\"text\" placeholder=\"deleted or none\" value=\"" + index + "\"> <button type\"button\" onclick=\"updateTheme();\">set name or delete</button></p>";
+          data += "<p>Track: <input type=\"text\" placeholder=\"deleted or none\" value=\"" + index + "\"> <button type=\"button\" onclick=\"updateTheme();\">set name or delete</button></p>";
           data += createMap(requirement, map[index]);
         }
       }
@@ -144,7 +146,7 @@ function parseRequirement(requirement, node)
     if (requirement.defaultElement && (!node.hasOwnProperty(requirement.attribute) || !node[requirement.attribute].hasOwnProperty("default")))
     {
       data += "<p>Track: Default</p>";
-      data += "<p>Track: <input type\"text\" placeholder=\"deleted or none\" value=\"default\"> <button type\"button\" onclick=\"updateTheme();\">set name or delete</button></p>";
+      data += "<p>Track: <input type=\"text\" placeholder=\"deleted or none\" value=\"default\"> <button type=\"button\" onclick=\"updateTheme();\">set name or delete</button></p>";
       var noneMap = [[]];
       data += createMap(requirement, noneMap);
     }

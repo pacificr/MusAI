@@ -18,3 +18,8 @@ std::shared_ptr<IIngredient> ProgressionIngredientBuilder::build()
 
   return progressionIngredient;
 }
+
+void ProgressionIngredientBuilder::registerWith(Describer& describer)
+{
+  describer.registerBuilder("IngredientBuilder", "ProgressionIngredientBuilder", "Progression");
+}

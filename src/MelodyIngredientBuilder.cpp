@@ -18,3 +18,8 @@ std::shared_ptr<IIngredient> MelodySequenceIngredientBuilder::build()
 
   return std::make_shared<SequenceIngredient>(pc, rhythm);
 }
+
+void MelodySequenceIngredientBuilder::registerWith(Describer& describer)
+{
+  describer.registerBuilder("IngredientBuilder", "MelodySequenceIngredientBuilder", "Melody Sequence");
+}

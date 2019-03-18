@@ -25,3 +25,9 @@ std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
 
   return std::make_shared<TimelineNoteCollection>(timeline);
 }
+
+void TimelineNoteCollectionBuilder::registerWith(Describer& describer)
+{
+  describer.registerBuilder("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "Timeline");
+  describer.registerMapRequirement("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "ingredients", "Tracks", "IngredientBuilder", "Ingredient");
+}

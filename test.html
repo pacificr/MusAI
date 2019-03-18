@@ -17,6 +17,9 @@
       onRuntimeInitialized: function(){
         setModule(Module);
         setTone(Tone);
+        var describer = new Module.Describer();
+        describer.registerDefaults();
+        setBuilders(describer.getDescription());
         displayTheme($("#root"), JSON.parse("{\"type\":\"Theme\"}"));
       }
     }

@@ -6,3 +6,8 @@ std::shared_ptr<IIngredient> CustomScaleIngredientBuilder::build()
 {
   return std::make_shared<ScaleIngredient>(std::make_shared<Scale>(mDegrees));
 }
+
+void CustomScaleIngredientBuilder::registerWith(Describer& describer)
+{
+  describer.registerBuilder("IngredientBuilder", "CustomScaleIngredientBuilder", "Custom Scale");
+}

@@ -1,7 +1,5 @@
 #include "../include/Theme.h"
 
-#include "../include/StructuredGeneratorBuilder.h"
-
 #include <time.h>
 
 Theme& Theme::addGeneratorBuilder(std::shared_ptr<IBuilder<IGenerator>> builder)
@@ -14,4 +12,10 @@ std::shared_ptr<IGenerator> Theme::getGenerator()
 {
   srand(time(NULL));
   return mGenerator.get();
+}
+
+void Theme::registerWith(Describer& describer)
+{
+  describer.registerBuilder("Theme", "Theme", "Theme");
+  describer.registerBuilderRequirement("Theme", "Theme", "GeneratorBuilder", "generator", "Generator");
 }

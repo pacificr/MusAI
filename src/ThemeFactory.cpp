@@ -11,7 +11,7 @@
 #include <json.hpp>
 
 #include "../include/Logger.h"
-#define LOC "json"
+#define LOC "factory"
 
 namespace MusAI
 {

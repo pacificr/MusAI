@@ -1,6 +1,7 @@
 #include "../include/MIDISignal.h"
 #include "../include/ThemeFactory.h"
 #include "../include/IGenerator.h"
+#include "../include/Describer.h"
 
 #include <emscripten/bind.h>
 
@@ -31,6 +32,12 @@ EMSCRIPTEN_BINDINGS(music_library)
     class_<Theme>("Theme")
       .smart_ptr<std::shared_ptr<Theme>>("Theme")
       .function("getGenerator", &Theme::getGenerator)
+    ;
+
+    class_<Describer>("Describer")
+      .constructor()
+      .function("registerDefaults", &Describer::registerDefaults)
+      .function("getDescription", &Describer::getDescription)
     ;
 
     function ("getTheme", &MusAI::getTheme);

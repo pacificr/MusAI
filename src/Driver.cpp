@@ -1,7 +1,6 @@
 
 #include "../include/ThemeFactory.h"
-#include "../include/StructuredGeneratorBuilder.h"
-#include "../include/TimelineNoteCollectionBuilder.h"
+#include "../include/Describer.h"
 
 #include "../include/Logger.h"
 #define LOC "driver"
@@ -16,6 +15,10 @@ int main(int argc, char* argv[])
   {
     logger.enable(argv[i]);
   } 
+
+  Describer d;
+  d.registerDefaults();
+  logger.log(LOC, d.getDescription());
 
   std::shared_ptr<Theme> theme = MusAI::getTheme("{\"generator\":[{\"type\":\"StructuredGeneratorBuilder\",\"minSections\":2,\"maxSections\":3,\"noteCollection\":[{\"type\":\"TimelineNoteCollectionBuilder\",\"ingredients\":{\"melody\":[[{\"type\":\"MelodySequenceIngredientBuilder\"}]],\"harmony\":[[{\"type\":\"HarmonySequenceIngredientBuilder\"}]],\"default\":[[{\"type\":\"ProgressionIngredientBuilder\"}],[{\"type\":\"CustomScaleIngredientBuilder\",\"degrees\":[0,1,2,3]},{\"type\":\"ScaleIngredientBuilder\",\"scale\":\"whole tone\"}]]}}]}]}");
 
