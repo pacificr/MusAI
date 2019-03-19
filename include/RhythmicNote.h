@@ -3,15 +3,18 @@
 class RhythmicNote
 {
   public:
-    int mValue = 1;
-    int mSubdivision = 1;
+    int mNumerator;
+    int mDenominator;
 
-    int mStartBeat = 0;
-    int mStartValue = 0;
-    int mStartSubdivision = 1;
+    int mStart;
 
-    bool mStrong = true;
+    int mStartBeat;
+    int mStartNumerator;
+    int mStartDenominator;
 
-    RhythmicNote(int value = 1, int subdivision = 1, int startBeat = 0, int startValue = 0, int startSubdivision = 1)
-      : mValue(value), mSubdivision(subdivision), mStartBeat(startBeat), mStartValue(startValue), mStartSubdivision(startSubdivision){};
+    RhythmicNote(int numerator = 1, int denominator = 1, int start = 0, int startBeat = 0, int startNumerator = 0, int startDenominator = 1)
+      : mNumerator(numerator), mDenominator(denominator), mStart(start), mStartBeat(startBeat), mStartNumerator(startNumerator), mStartDenominator(startDenominator){};
+
+    double getLength();
+    double getStart();
 };

@@ -12,7 +12,7 @@ void TimelineNoteCollectionBuilder::addIngredientBuilderSet(std::string track, s
 
 std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
 {
-  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>(16);
+  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>();
   for (auto trackIngredient : mIngredients)
   {
     timeline->addTrack(trackIngredient.first);

@@ -17,7 +17,6 @@ class Timeline
 {
   private:
     std::set<std::string> mTracks;
-    int mNumBeats;
 
     std::map<std::string, TimelineTrack<Tempo>> mTempos;
     std::map<std::string, TimelineTrack<Tonic>> mTonics;
@@ -28,7 +27,7 @@ class Timeline
 
     void addTrackNow(std::string);
   public:
-    Timeline(int length);
+    Timeline();
 
     void addTrack(std::string);
     void add(std::shared_ptr<Tempo>, std::string track = "default", int startBeat = -1, int endBeat = -1);
@@ -39,6 +38,6 @@ class Timeline
     void add(std::shared_ptr<Rhythm>, std::string track = "default", int startBeat = -1, int endBeat = -1);
 
     std::set<std::string> getTracks() const;
-    double getLength(std::string track = "default") const;
+    double getLength() const;
     std::vector<Note> getNotes(std::string track);
 };

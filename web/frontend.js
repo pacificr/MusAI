@@ -18,7 +18,7 @@ function setModule(module)
 function setTone(tone)
 {
   Tone = tone;
-  synth = new Tone.PolySynth(5, Tone.Synth).toMaster();
+  synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
 }
 
 function setBuilders(b)

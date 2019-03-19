@@ -1,9 +1,11 @@
 #include "../include/Timeline.h"
 
+#include <math.h>
+
 #include "../include/Logger.h"
 #define LOC "timeline"
 
-Timeline::Timeline(int numBeats) : mNumBeats(numBeats)
+Timeline::Timeline()
 {
   addTrackNow("default");
 }
@@ -62,13 +64,23 @@ std::set<std::string> Timeline::getTracks() const
   return mTracks;
 }
 
-double Timeline::getLength(std::string track) const
+double Timeline::getLength() const
 {
-  std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject();
-  if (NULL == tempo)
-    tempo = mTempos.at("default").getObject();
+  double length = 0;
 
-  return tempo->applyTempo(mNumBeats);
+  for (std::string track : mTracks)
+  {
+    std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject();
+    if (NULL == rhythm)
+      rhythm = mRhythms.at("default").getObject();
+    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject();
+    if (NULL == tempo)
+      tempo = mTempos.at("default").getObject();
+
+    length = std::max(length, tempo->applyTempo(rhythm->getLength()));
+  }
+
+  return length;
 }
 
 std::vector<Note> Timeline::getNotes(std::string track)
@@ -82,41 +94,49 @@ std::vector<Note> Timeline::getNotes(std::string track)
   std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject(currentBeat);
   if (NULL == rhythm)
     rhythm = mRhythms.at("default").getObject(currentBeat);
+  if (NULL == rhythm)
+    logger.log(LOC, "No rhythm found");
 
   for (RhythmicNote rhythmicNote : rhythm->getNotes())
   {
-    std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(currentBeat + rhythmicNote.getStart());
     if (NULL == pitches)
       pitches = mPitchSequences.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+    if (NULL == pitches)
+      logger.log(LOC, "No pitches found");
 
     /*if (&pitchCollection != oldPitchCollection) compare starting beats of pitch collection stored in Timeline
     {
       oldPitchCollection = &pitchCollection;
       currentPitch = 0;
     }*/
-    std::shared_ptr<Scale> scale = mScales.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Scale> scale = mScales.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
     if (NULL == scale)
-      scale = mScales.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      scale = mScales.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == scale)
+      logger.log(LOC, "No scale found");
 
-    std::shared_ptr<Chord> chord = mChords.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Chord> chord = mChords.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
     if (NULL == chord)
-      chord = mChords.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      chord = mChords.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == chord)
+      logger.log(LOC, "no chord found");
 
-    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
     if (NULL == tempo)
-      tempo = mTempos.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      tempo = mTempos.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == tempo)
+      logger.log(LOC, "No tempo found");
 
-    std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(currentBeat + rhythmicNote.mStartBeat);
+    std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
     if (NULL == tonic)
-      tonic = mTonics.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      tonic = mTonics.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == tonic)
+      logger.log(LOC, "No tonic found");
 
-    double start = tempo->applyTempo(
-        double(currentBeat)
-          + double(rhythmicNote.mStartBeat)
-          + (double(rhythmicNote.mStartValue) / double(rhythmicNote.mStartSubdivision))
-    );
+    double start = tempo->applyTempo(double(currentBeat) + rhythmicNote.getStart());
 
-    double length = tempo->applyTempo(double(rhythmicNote.mValue) / double(rhythmicNote.mSubdivision));
+    double length = tempo->applyTempo(rhythmicNote.getLength());
 
     for (int pitch : pitches->getUnison(currentPitch).resolve(*scale, *chord))
     {

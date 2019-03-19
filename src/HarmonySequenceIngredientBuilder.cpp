@@ -16,7 +16,7 @@ std::shared_ptr<IIngredient> HarmonySequenceIngredientBuilder::build()
           .add(std::make_shared<ChordPitch>(2, -1))
     ));
 
-    r->add(RhythmicNote(4, 1, 4 * i));
+    r->add(RhythmicNote(4, 1, i));
   }
   return std::make_shared<SequenceIngredient>(pc, r);
 }

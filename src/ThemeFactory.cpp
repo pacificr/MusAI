@@ -7,6 +7,7 @@
 #include "../include/ProgressionIngredientBuilder.h"
 #include "../include/ScaleIngredientBuilder.h"
 #include "../include/CustomScaleIngredientBuilder.h"
+#include "../include/ArpeggioSequenceIngredientBuilder.h"
 
 #include <json.hpp>
 
@@ -58,8 +59,30 @@ namespace MusAI
 
       return builder;
     }
+    else if("ArpeggioSequenceIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<ArpeggioSequenceIngredientBuilder>();
 
-    logger.log(LOC, "Ingredient fail");
+      auto const length = j.find("length");
+      if (length != j.end())
+        builder->mLength = *length;
+
+      auto const numNotes = j.find("numNotes");
+      if (numNotes != j.end())
+        builder->mNumNotes = *numNotes;
+
+      auto const numBeats = j.find("numBeats");
+      if (numBeats != j.end())
+        builder->mNumBeats = *numBeats;
+
+      auto const octave = j.find("octave");
+      if (octave != j.end())
+        builder->mOctave = *octave;
+
+      return builder;
+    }
+
+    logger.log(LOC, "Ingredient ================ FAIL");
     return nullptr;
   }
 
@@ -87,7 +110,7 @@ namespace MusAI
       return timelineNoteCollectionBuilder;
     }
 
-    logger.log(LOC, "NoteCollection fail");
+    logger.log(LOC, "NoteCollection ====================== FAIL");
     return nullptr;
   }
 
@@ -117,7 +140,7 @@ namespace MusAI
       return structuredGeneratorBuilder;
     }
 
-    logger.log(LOC, "Generator fail");
+    logger.log(LOC, "Generator ========================== FAIL");
     return nullptr;
   }
 
