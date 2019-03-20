@@ -18,6 +18,7 @@ void Timeline::addTrackNow(std::string track)
   mChords.insert(std::pair<std::string, TimelineTrack<Chord>>(track, TimelineTrack<Chord>()));
   mPitchSequences.insert(std::pair<std::string, TimelineTrack<PitchSequence>>(track, TimelineTrack<PitchSequence>()));
   mRhythms.insert(std::pair<std::string, TimelineTrack<Rhythm>>(track, TimelineTrack<Rhythm>()));
+  mChannels.insert(std::pair<std::string, TimelineTrack<int>>(track, TimelineTrack<int>()));
 }
 
 void Timeline::addTrack(std::string track)
@@ -57,6 +58,11 @@ void Timeline::add(std::shared_ptr<PitchSequence> pitches, std::string track, in
 void Timeline::add(std::shared_ptr<Rhythm> rhythm, std::string track, int begin, int end)
 {
   mRhythms.at(track).add(TimelineBucket<Rhythm>(rhythm, begin, end));
+}
+
+void Timeline::add(std::shared_ptr<int> channel, std::string track, int begin, int end)
+{
+  mChannels.at(track).add(TimelineBucket<int>(channel, begin, end));
 }
 
 std::set<std::string> Timeline::getTracks() const
@@ -134,19 +140,26 @@ std::vector<Note> Timeline::getNotes(std::string track)
     if (NULL == tonic)
       logger.log(LOC, "No tonic found");
 
+    std::shared_ptr<int> channel = mChannels.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == channel)
+      channel = mChannels.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+    if (NULL == channel)
+      logger.log(LOC, "No channel found");
+
     double start = tempo->applyTempo(double(currentBeat) + rhythmicNote.getStart());
 
     double length = tempo->applyTempo(rhythmicNote.getLength());
 
     for (int pitch : pitches->getUnison(currentPitch).resolve(*scale, *chord))
     {
-      Note note(tonic->getCenterPitch() + pitch, start, length);    
+      Note note(tonic->getCenterPitch() + pitch, start, length, *channel);
 
       logger.log(LOC, "adding note on track " + track
           + " " + std::to_string(note.mKey)
           + " " + std::to_string(note.mTime)
           + " " + std::to_string(note.mDuration)
           + " " + std::to_string(note.mVelocity)
+          + " " + std::to_string(note.mChannel)
       );
       notes.push_back(note);
     }

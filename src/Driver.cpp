@@ -31,12 +31,15 @@ int main(int argc, char* argv[])
 
   std::shared_ptr<IGenerator> generator = theme->getGenerator();
 
-  MIDIStream stream = generator->getNext(16);
-
-  while (stream.hasNext())
+  for (int i = 0; i < 100; i++)
   {
-    logger.log(LOC, stream.getNext().getNoteName());
-    stream.getNext();
+    MIDIStream stream = generator->getNext(i * 20 + 20);
+
+    while (stream.hasNext())
+    {
+      logger.log(LOC, stream.getNext().getNoteName());
+      stream.getNext();
+    }
   }
 
   return 0;

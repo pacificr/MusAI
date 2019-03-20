@@ -24,6 +24,7 @@ class Timeline
     std::map<std::string, TimelineTrack<Chord>> mChords;
     std::map<std::string, TimelineTrack<PitchSequence>> mPitchSequences;
     std::map<std::string, TimelineTrack<Rhythm>> mRhythms;
+    std::map<std::string, TimelineTrack<int>> mChannels;
 
     void addTrackNow(std::string);
   public:
@@ -36,6 +37,7 @@ class Timeline
     void add(std::shared_ptr<Chord>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<PitchSequence>, std::string track = "default", int startBeat = -1, int endBeat = -1);
     void add(std::shared_ptr<Rhythm>, std::string track = "default", int startBeat = -1, int endBeat = -1);
+    void add(std::shared_ptr<int>, std::string track = "default", int startBeat = -1, int endBeat = -1);
 
     std::set<std::string> getTracks() const;
     double getLength() const;

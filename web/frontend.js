@@ -1,14 +1,19 @@
 
 
 var generator;
-var synth;
-var g = true;
 
 var builders;
 
 var nextUpdate = 0.0;
 var increment = 1.0;
 var lookAhead = 1.0;
+
+var startingPoint = 0;
+var playing = false;
+
+var synths;
+
+let voicesPerSynth = 5;
 
 function setModule(module)
 {
@@ -18,7 +23,7 @@ function setModule(module)
 function setTone(tone)
 {
   Tone = tone;
-  synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+  setSynths();
 }
 
 function setBuilders(b)
@@ -26,37 +31,63 @@ function setBuilders(b)
   builders = JSON.parse(b);
 }
 
-function play(data)
+function setSynths()
 {
-  console.log("Playing");
-  console.log(data);
-  var theme = Module.getTheme(data);
-  generator = theme.getGenerator();
-  console.log("Start");
-  updateTime();
+  synths = [];
+  synths.push(new Tone.PolySynth(voicesPerSynth, Tone.Synth).toMaster());
+  synths.push(new Tone.PolySynth(voicesPerSynth, Tone.AMSynth).toMaster());
+  synths.push(new Tone.PolySynth(voicesPerSynth, Tone.DuoSynth).toMaster());
+  synths.push(new Tone.PolySynth(voicesPerSynth, Tone.FMSynth).toMaster());
+  synths.push(new Tone.PolySynth(voicesPerSynth, Tone.MonoSynth).toMaster());
 }
 
-function go(root)
+function save()
 {
-  g = false;
-  console.log("Stopping");
+  $("#data").val(JSON.stringify(getTheme($("#root"))));
 }
 
-function scheduleNote(note, duration)
+function load()
 {
-  synth.triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, note.time + 1);
+  displayTheme($("#root"), JSON.parse($("#data").val()));
+}
+
+function play()
+{
+  playing = !playing;
+  if (playing)
+  {
+    console.log("playing");
+    generator = Module.getTheme(JSON.stringify(getTheme($("#root")))).getGenerator();
+    startingPoint = Tone.now();
+    updateTime();
+    $("#play").html("Stop");
+  }
+  else
+  {
+    synths.forEach(function(synth){
+      synth.releaseAll();
+    });
+    $("#play").html("Play");
+  } 
+}
+
+function scheduleNote(channel, note, duration, timing)
+{
+  console.log("Note: " + note.key + " " + duration + " at " + timing + " channel: " + channel);
+  synths[channel].triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, timing);
 }
 
 function updateTime(){
-  if (g)
+  if (playing)
   {
     requestAnimationFrame(updateTime);
   }
-  document.getElementById("test").innerHTML = Tone.now().toFixed(3);
+
+  $("#test").text((Tone.now() - startingPoint).toFixed(3));
 
   if (Tone.now() >= nextUpdate)
   {
-    var currentTime = Tone.now();
+    var currentTime = Tone.now() - startingPoint;
     nextUpdate = currentTime + increment;
     var stream = generator.getNext(nextUpdate + lookAhead);
     var notes = [];
@@ -74,7 +105,7 @@ function updateTime(){
         {
           if (notes[i].key == note.key && notes[i].channel == note.channel)
           {
-            scheduleNote (notes[i], note.time - notes[i].time);
+            scheduleNote (note.channel, notes[i], note.time - notes[i].time, notes[i].time + startingPoint);
             //if (note.time - notes[i].time < 2)
               //console.log(note.key);
             notes.splice(i, 1);
@@ -115,7 +146,7 @@ function parseRequirement(requirement, node)
   
   if (requirement.type == "int")
   {
-    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed\"><p>" + requirement.display + ": <input type=\"number\" onchange=\"updateTheme();\"";
+    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed simple\"><p>" + requirement.display + ": <input type=\"number\" onchange=\"updateTheme();\"";
     if (node.hasOwnProperty(requirement.attribute))
     {
       data += " value=\"" + node[requirement.attribute] + "\"";
@@ -128,7 +159,7 @@ function parseRequirement(requirement, node)
   }
   else if (requirement.type == "map")
   {
-    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed\"><h4>" + requirement.display + ":</h4>";
+    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed map\"><h4>" + requirement.display + ":</h4>";
 
     if (node.hasOwnProperty(requirement.attribute))
     {
@@ -156,7 +187,7 @@ function parseRequirement(requirement, node)
   }
   else if(requirement.type == "choice")
   {
-    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed\"><p>" + requirement.display + ": <select>"
+    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed simple\"><p>" + requirement.display + ": <select>"
     requirement.choices.forEach(function(choice)
     {
       data += "<option value=\"" + choice + "\"";
@@ -194,7 +225,7 @@ function createMap(requirement, mapNode)
   {
     mapNode.forEach(function(selectedArray)
     {
-      data += "<div class=\"boxed\">";
+      data += "<div class=\"boxed-map\">";
       var j = 0;
       selectedArray.forEach(function(selectedNode)
       {
@@ -207,7 +238,7 @@ function createMap(requirement, mapNode)
       i+=1;
     });
   }
-  data += "<div class=\"boxed\">"
+  data += "<div class=\"boxed-map\">"
   var noneNode = {type:"None"};
   data += createSelect(requirement.requirement, noneNode);
   data += "</div>";
@@ -216,7 +247,7 @@ function createMap(requirement, mapNode)
 
 function createSelect(requirement, selectedNode)
 {
-  var data = "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed\"><p>" + requirement.display + ": <select data-builderType=\"" + requirement.type + "\" onchange=\"updateSelect(this);\"><option value=\"None\">None</option>";
+  var data = "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed builder\"><p>" + requirement.display + ": <select data-builderType=\"" + requirement.type + "\" onchange=\"updateSelect(this);\"><option value=\"None\">None</option>";
   var builder = builders[requirement.type];
   for (var prop in builder)
   {

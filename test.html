@@ -2,16 +2,27 @@
 <meta charset="UTF-8"> 
 <html>
   <head>
+    <title>MusAI</title>
     <link rel="stylesheet" type="text/css" href="web/style.css">
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="https://tonejs.github.io/build/Tone.js"></script>
     <script src="web/frontend.js"></script>
   </head>
-  <button onclick="play(JSON.stringify(getTheme($('#root'))))">Go</button>
-  <button onclick="console.log(getTheme($('#root')));">Test</button>
-  <button onclick="console.log(JSON.stringify(getTheme($('#root'))))">Test string</button>
+  <h1>MusAI</h1>
+  <p>Instruments:</p>
+  <ul>
+    <li>Channel 0. Synth</li>
+    <li>Channel 1. AMSynth</li>
+    <li>Channel 2. DuoSynth</li>
+    <li>Channel 3. FMSynth</li>
+    <li>Channel 4. MonoSynth</li>
+  </ul>
+  <button type="button" id="play" onclick="play()">Play</button>
+  <button onclick="save()">Save</button>
+  <button onclick="load()">Load</button>
+  <input id="data" type="text">
   <p id="test"></p>
-  <div id="root" class="boxed"></div> 
+  <div id="root" class="boxed builder"></div>
   <script>
     var Module = {
       onRuntimeInitialized: function(){
@@ -23,7 +34,6 @@
         displayTheme($("#root"), JSON.parse("{\"type\":\"Theme\"}"));
       }
     }
-
   </script>
   <script src="js/MusAI.js"></script>
 </html>

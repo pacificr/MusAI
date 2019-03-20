@@ -9,6 +9,7 @@
 #include "../include/MelodySequenceIngredientBuilder.h"
 #include "../include/HarmonySequenceIngredientBuilder.h"
 #include "../include/ArpeggioSequenceIngredientBuilder.h"
+#include "../include/ChannelIngredientBuilder.h"
 
 using json = nlohmann::json;
 
@@ -23,6 +24,7 @@ void Describer::registerDefaults()
   MelodySequenceIngredientBuilder::registerWith(*this);
   HarmonySequenceIngredientBuilder::registerWith(*this);
   ArpeggioSequenceIngredientBuilder::registerWith(*this);
+  ChannelIngredientBuilder::registerWith(*this);
 }
 
 void Describer::registerBuilder(std::string builds, std::string identifier, std::string display)

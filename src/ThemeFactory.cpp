@@ -8,6 +8,7 @@
 #include "../include/ScaleIngredientBuilder.h"
 #include "../include/CustomScaleIngredientBuilder.h"
 #include "../include/ArpeggioSequenceIngredientBuilder.h"
+#include "../include/ChannelIngredientBuilder.h"
 
 #include <json.hpp>
 
@@ -78,6 +79,16 @@ namespace MusAI
       auto const octave = j.find("octave");
       if (octave != j.end())
         builder->mOctave = *octave;
+
+      return builder;
+    }
+    else if ("ChannelIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<ChannelIngredientBuilder>();
+
+      auto const channel = j.find("channel");
+      if (channel != j.end())
+        builder->mChannel = *channel;
 
       return builder;
     }

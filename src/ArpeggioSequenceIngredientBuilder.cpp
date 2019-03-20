@@ -17,7 +17,7 @@ std::shared_ptr<IIngredient> ArpeggioSequenceIngredientBuilder::build()
 
   while ((note * mNumBeats) / mNumNotes < mLength)
   {
-    pc->add(std::make_shared<Unison>(std::make_shared<ChordPitch>(pitch++)));
+    pc->add(std::make_shared<Unison>(std::make_shared<ChordPitch>(pitch++, mOctave)));
     if (pitch >= mNumNotes)
       pitch = 0;
 

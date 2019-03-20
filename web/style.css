@@ -1,6 +1,29 @@
 .boxed{
   border-style: solid;
   border-width: 2px;
-  margin: 4px;
-  padding: 4px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.boxed-map{
+  border-style: dotted;
+  border-width: 2px;
+  margin: 2px;
+  padding: 2px;
+}
+
+body{
+  background-color: #efefef;
+}
+
+.simple{
+  background-color: #82abb2;
+}
+
+.map{
+  background-color: #8982b2;
+}
+
+.builder{
+  background-color: #8293b2;
 }
