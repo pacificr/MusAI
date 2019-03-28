@@ -16,6 +16,8 @@
 class Timeline
 {
   private:
+    int mLength;
+    bool mUseSlowestTempo;
     std::set<std::string> mTracks;
 
     std::map<std::string, TimelineTrack<Tempo>> mTempos;
@@ -28,7 +30,7 @@ class Timeline
 
     void addTrackNow(std::string);
   public:
-    Timeline();
+    Timeline(int, bool);
 
     void addTrack(std::string);
     void add(std::shared_ptr<Tempo>, std::string track = "default", int startBeat = -1, int endBeat = -1);

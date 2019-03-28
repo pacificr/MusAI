@@ -9,6 +9,8 @@
 #include "../include/CustomScaleIngredientBuilder.h"
 #include "../include/ArpeggioSequenceIngredientBuilder.h"
 #include "../include/ChannelIngredientBuilder.h"
+#include "../include/TonicIngredientBuilder.h"
+#include "../include/BPMTempoIngredientBuilder.h"
 
 #include <json.hpp>
 
@@ -92,6 +94,34 @@ namespace MusAI
 
       return builder;
     }
+    else if ("TonicIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<TonicIngredientBuilder>();
+
+      auto const tonic = j.find("tonic");
+      if (tonic != j.end())
+        builder->mTonicTitle = *tonic;
+
+      auto const octave = j.find("octave");
+      if (octave != j.end())
+        builder->mOctave = *octave;
+
+      return builder;
+    }
+    else if ("BPMTempoIngredientBuilder" == *ingredientBuilderType)
+    {
+      auto builder = std::make_shared<BPMTempoIngredientBuilder>();
+
+      auto const minBPM = j.find("minBPM");
+      if (minBPM != j.end())
+        builder->mMinBPM = *minBPM;
+
+      auto const maxBPM = j.find("maxBPM");
+      if (maxBPM != j.end())
+        builder->mMaxBPM = *maxBPM;
+
+      return builder;
+    }
 
     logger.log(LOC, "Ingredient ================ FAIL");
     return nullptr;
@@ -118,6 +148,11 @@ namespace MusAI
         for (auto& track : ingredients->items())
           for (auto const& builderArray : track.value())
             timelineNoteCollectionBuilder->addIngredientBuilderSet(track.key(), getIngredientBuilderSet(builderArray));
+
+      auto const length = j.find("length");
+      if (length != j.end())
+        timelineNoteCollectionBuilder->mLength = *length;
+
       return timelineNoteCollectionBuilder;
     }
 

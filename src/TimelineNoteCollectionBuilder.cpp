@@ -12,7 +12,7 @@ void TimelineNoteCollectionBuilder::addIngredientBuilderSet(std::string track, s
 
 std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
 {
-  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>();
+  std::shared_ptr<Timeline> timeline = std::make_shared<Timeline>(mLength, mUseSlowestTempo);
   for (auto trackIngredient : mIngredients)
   {
     timeline->addTrack(trackIngredient.first);
@@ -20,14 +20,12 @@ std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
     trackIngredient.second->get()->apply(*timeline, trackIngredient.first);
   }
 
-  timeline->add(std::make_shared<Tempo>(Tempo(80)));
-  timeline->add(std::make_shared<Tonic>(Tonic(0)));
-
   return std::make_shared<TimelineNoteCollection>(timeline);
 }
 
 void TimelineNoteCollectionBuilder::registerWith(Describer& describer)
 {
   describer.registerBuilder("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "Timeline");
+  describer.registerIntRequirement("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "length", "Number of Beats", 16);
   describer.registerMapRequirement("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "ingredients", "Tracks", "IngredientBuilder", "Ingredient");
 }

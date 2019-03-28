@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
   std::shared_ptr<IGenerator> generator = theme->getGenerator();
 
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 1; i++)
   {
     MIDIStream stream = generator->getNext(i * 20 + 20);
 

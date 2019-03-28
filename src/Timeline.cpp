@@ -1,11 +1,19 @@
 #include "../include/Timeline.h"
 
+#include "../include/BPMTempoIngredientBuilder.h"
+#include "../include/TonicIngredientBuilder.h"
+#include "../include/ChannelIngredientBuilder.h"
+#include "../include/ScaleIngredientBuilder.h"
+#include "../include/ProgressionIngredientBuilder.h"
+#include "../include/MelodySequenceIngredientBuilder.h"
+
 #include <math.h>
 
 #include "../include/Logger.h"
 #define LOC "timeline"
 
-Timeline::Timeline()
+Timeline::Timeline(int length, bool useSlowest)
+  : mLength(length), mUseSlowestTempo(useSlowest)
 {
   addTrackNow("default");
 }
@@ -72,21 +80,21 @@ std::set<std::string> Timeline::getTracks() const
 
 double Timeline::getLength() const
 {
-  double length = 0;
+  std::shared_ptr<Tempo> tempo = mTempos.at("default").getObject();
 
   for (std::string track : mTracks)
   {
-    std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject();
-    if (NULL == rhythm)
-      rhythm = mRhythms.at("default").getObject();
-    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject();
-    if (NULL == tempo)
-      tempo = mTempos.at("default").getObject();
-
-    length = std::max(length, tempo->applyTempo(rhythm->getLength()));
+    std::shared_ptr<Tempo> checking = mTempos.at(track).getObject();
+    if (NULL != checking)
+    {
+      if ((mUseSlowestTempo && checking->mBpm < tempo->mBpm)
+          || (!mUseSlowestTempo && checking->mBpm > tempo->mBpm))
+      {
+        tempo = checking;
+      }
+    }
   }
-
-  return length;
+  return tempo->applyTempo(mLength);
 }
 
 std::vector<Note> Timeline::getNotes(std::string track)
@@ -101,50 +109,73 @@ std::vector<Note> Timeline::getNotes(std::string track)
   if (NULL == rhythm)
     rhythm = mRhythms.at("default").getObject(currentBeat);
   if (NULL == rhythm)
-    logger.log(LOC, "No rhythm found");
+  {
+    MelodySequenceIngredientBuilder().build()->apply(*this, "default");
+    rhythm = mRhythms.at("default").getObject(currentBeat);
+  }
 
   for (RhythmicNote rhythmicNote : rhythm->getNotes())
   {
-    std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(currentBeat + rhythmicNote.getStart());
+    int t = currentBeat + floor(rhythmicNote.getStart());
+
+    std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(t);
     if (NULL == pitches)
-      pitches = mPitchSequences.at("default").getObject(currentBeat + rhythmicNote.mStartBeat);
+      pitches = mPitchSequences.at("default").getObject(t);
     if (NULL == pitches)
-      logger.log(LOC, "No pitches found");
+    {
+      MelodySequenceIngredientBuilder().build()->apply(*this, "default");
+      pitches = mPitchSequences.at("default").getObject(t);
+    }
 
     /*if (&pitchCollection != oldPitchCollection) compare starting beats of pitch collection stored in Timeline
     {
       oldPitchCollection = &pitchCollection;
       currentPitch = 0;
     }*/
-    std::shared_ptr<Scale> scale = mScales.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    std::shared_ptr<Scale> scale = mScales.at(track).getObject(t);
     if (NULL == scale)
-      scale = mScales.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+      scale = mScales.at("default").getObject(t);
     if (NULL == scale)
-      logger.log(LOC, "No scale found");
+    {
+      ScaleIngredientBuilder().build()->apply(*this, "default");
+      scale = mScales.at("default").getObject(t);
+    }
 
-    std::shared_ptr<Chord> chord = mChords.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    std::shared_ptr<Chord> chord = mChords.at(track).getObject(t);
     if (NULL == chord)
-      chord = mChords.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+      chord = mChords.at("default").getObject(t);
     if (NULL == chord)
-      logger.log(LOC, "no chord found");
+    {
+      ProgressionIngredientBuilder().build()->apply(*this, "default");
+      chord = mChords.at("default").getObject(t);
+    }
 
-    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(t);
     if (NULL == tempo)
-      tempo = mTempos.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+      tempo = mTempos.at("default").getObject(t);
     if (NULL == tempo)
-      logger.log(LOC, "No tempo found");
+    {
+      BPMTempoIngredientBuilder().build()->apply(*this, "default");
+      tempo = mTempos.at("default").getObject(t);
+    }
 
-    std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(t);
     if (NULL == tonic)
-      tonic = mTonics.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+      tonic = mTonics.at("default").getObject(t);
     if (NULL == tonic)
-      logger.log(LOC, "No tonic found");
+    {
+      TonicIngredientBuilder().build()->apply(*this, "default");
+      tonic = mTonics.at("default").getObject(t);
+    }
 
-    std::shared_ptr<int> channel = mChannels.at(track).getObject(currentBeat + floor(rhythmicNote.getStart()));
+    std::shared_ptr<int> channel = mChannels.at(track).getObject(t);
     if (NULL == channel)
-      channel = mChannels.at("default").getObject(currentBeat + floor(rhythmicNote.getStart()));
+      channel = mChannels.at("default").getObject(t);
     if (NULL == channel)
-      logger.log(LOC, "No channel found");
+    {
+      ChannelIngredientBuilder().build()->apply(*this, "default");
+      channel = mChannels.at("default").getObject(t);
+    }
 
     double start = tempo->applyTempo(double(currentBeat) + rhythmicNote.getStart());
 
