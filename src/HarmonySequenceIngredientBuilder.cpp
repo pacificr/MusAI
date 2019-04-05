@@ -23,5 +23,5 @@ std::shared_ptr<IIngredient> HarmonySequenceIngredientBuilder::build()
 
 void HarmonySequenceIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "HarmonySequenceIngredientBuilder", "Harmony");
+  describer.registerBuilder("IngredientBuilder", "HarmonySequenceIngredientBuilder", "Harmony", {});
 }

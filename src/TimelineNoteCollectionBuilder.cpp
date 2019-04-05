@@ -25,7 +25,8 @@ std::shared_ptr<INoteCollection> TimelineNoteCollectionBuilder::build()
 
 void TimelineNoteCollectionBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "Timeline");
-  describer.registerIntRequirement("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "length", "Number of Beats", 16);
-  describer.registerMapRequirement("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "ingredients", "Tracks", "IngredientBuilder", "Ingredient");
+  describer.registerBuilder("NoteCollectionBuilder", "TimelineNoteCollectionBuilder", "Timeline", {
+    Describer::intRequirement("length", "Number of Beats", 16),
+    Describer::mapRequirement("ingredients", "Tracks", Describer::builderRequirement("IngredientBuilder", Describer::SUB_ATTRIBUTE, "Ingredient"))
+  });
 }

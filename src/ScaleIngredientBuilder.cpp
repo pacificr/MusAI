@@ -46,20 +46,21 @@ std::shared_ptr<IIngredient> ScaleIngredientBuilder::build()
 
 void ScaleIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "ScaleIngredientBuilder", "Scale");
-  describer.registerChoiceRequirement("IngredientBuilder", "ScaleIngredientBuilder", "scale", "Scale", {
-    MAJOR,
-    MINOR,
-    MAJOR_PENTATONIC,
-    MINOR_PENTATONIC,
-    WHOLE_TONE,
-    CHROMATIC,
-    IONIAN,
-    DORIAN,
-    PHRYGIAN,
-    LYDIAN,
-    MYXOLYDIAN,
-    AEOLIAN,
-    LOCRIAN
+  describer.registerBuilder("IngredientBuilder", "ScaleIngredientBuilder", "Scale", {
+    Describer::choiceRequirement("scale", "Scale", {
+      MAJOR,
+      MINOR,
+      MAJOR_PENTATONIC,
+      MINOR_PENTATONIC,
+      WHOLE_TONE,
+      CHROMATIC,
+      IONIAN,
+      DORIAN,
+      PHRYGIAN,
+      LYDIAN,
+      MYXOLYDIAN,
+      AEOLIAN,
+      LOCRIAN
+    })
   });
 }

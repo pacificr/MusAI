@@ -9,6 +9,7 @@ std::shared_ptr<IIngredient> ChannelIngredientBuilder::build()
 
 void ChannelIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "ChannelIngredientBuilder", "Channel");
-  describer.registerIntRequirement("IngredientBuilder", "ChannelIngredientBuilder", "channel", "Channel", 0);
+  describer.registerBuilder("IngredientBuilder", "ChannelIngredientBuilder", "Channel", {
+    Describer::intRequirement("channel", "Channel", 0)
+  });
 }

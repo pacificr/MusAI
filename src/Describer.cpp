@@ -15,6 +15,8 @@
 
 using json = nlohmann::json;
 
+const std::string Describer::SUB_ATTRIBUTE = "sub-attribute";
+
 void Describer::registerDefaults()
 {
   Theme::registerWith(*this);
@@ -31,7 +33,7 @@ void Describer::registerDefaults()
   BPMTempoIngredientBuilder::registerWith(*this);
 }
 
-void Describer::registerBuilder(std::string builds, std::string identifier, std::string display)
+void Describer::registerBuilder(std::string builds, std::string identifier, std::string display, std::vector<json> requirements)
 {
   auto const builderType = description.find(builds);
   if (builderType == description.end())
@@ -40,50 +42,57 @@ void Describer::registerBuilder(std::string builds, std::string identifier, std:
   }
   description[builds][identifier] = json::object();
   description[builds][identifier]["display"] = display;
-  description[builds][identifier]["requirements"] = json::array();
+  description[builds][identifier]["requirements"] = requirements;
 }
 
-void Describer::registerIntRequirement(std::string builds, std::string identifier, std::string attribute, std::string display, int defaultValue)
+json Describer::intRequirement(std::string attribute, std::string display, int defaultValue)
 {
-  description[builds][identifier]["requirements"].push_back({
+  return {
     { "type", "int" },
     { "attribute", attribute },
     { "display", display },
     { "default", defaultValue }
-  });
+  };
 }
 
-void Describer::registerMapRequirement(std::string builds, std::string identifier, std::string attribute, std::string display, std::string type, std::string typeDisplay, bool defaultElement)
+json Describer::mapRequirement(std::string attribute, std::string display, json requirement, bool defaultElement)
 {
-  description[builds][identifier]["requirements"].push_back({
+  return {
       { "type", "map" },
       { "attribute", attribute },
       { "display", display },
       { "defaultElement", defaultElement },
-      { "requirement", {
-        { "type", type },
-        { "display", typeDisplay }
-      }}
-  });
+      { "requirement", requirement}
+  };
 }
 
-void Describer::registerChoiceRequirement(std::string builds, std::string identifier, std::string attribute, std::string display, std::vector<std::string> choices)
+json Describer::choiceRequirement(std::string attribute, std::string display, std::vector<std::string> choices)
 {
-  description[builds][identifier]["requirements"].push_back({
+  return {
     { "type", "choice" },
     { "attribute", attribute },
     { "display", display },
     { "choices", choices }
-  });
+  };
 }
 
-void Describer::registerBuilderRequirement(std::string builds, std::string identifier, std::string type, std::string attribute, std::string display)
+json Describer::arrayRequirement(std::string attribute, std::string display, json requirement)
 {
-  description[builds][identifier]["requirements"].push_back({
+  return {
+    { "type", "array" },
+    { "attribute", attribute },
+    { "display", display },
+    { "requirement", requirement}
+  };
+}
+
+json Describer::builderRequirement(std::string type, std::string attribute, std::string display)
+{
+  return {
     { "type", type },
     { "attribute", attribute },
     { "display", display }
-  });
+  };
 }
 
 std::string Describer::getDescription() const

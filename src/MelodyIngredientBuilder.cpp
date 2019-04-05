@@ -21,5 +21,5 @@ std::shared_ptr<IIngredient> MelodySequenceIngredientBuilder::build()
 
 void MelodySequenceIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "MelodySequenceIngredientBuilder", "Melody");
+  describer.registerBuilder("IngredientBuilder", "MelodySequenceIngredientBuilder", "Melody", {});
 }

@@ -60,26 +60,27 @@ std::shared_ptr<IIngredient> TonicIngredientBuilder::build()
 
 void TonicIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "TonicIngredientBuilder", "Tonic");
-  describer.registerChoiceRequirement("IngredientBuilder", "TonicIngredientBuilder", "tonic", "Tonic", {
-    RANDOM,
-    C,
-    CSHARP,
-    DFLAT,
-    D,
-    DSHARP,
-    EFLAT,
-    E,
-    F,
-    FSHARP,
-    GFLAT,
-    G,
-    GSHARP,
-    AFLAT,
-    A,
-    ASHARP,
-    BFLAT,
-    B
+  describer.registerBuilder("IngredientBuilder", "TonicIngredientBuilder", "Tonic", {
+    Describer::choiceRequirement("tonic", "Tonic", {
+      RANDOM,
+      C,
+      CSHARP,
+      DFLAT,
+      D,
+      DSHARP,
+      EFLAT,
+      E,
+      F,
+      FSHARP,
+      GFLAT,
+      G,
+      GSHARP,
+      AFLAT,
+      A,
+      ASHARP,
+      BFLAT,
+      B
+    }),
+    Describer::intRequirement("octave", "Octave", 5)
   });
-  describer.registerIntRequirement("IngredientBuilder", "TonicIngredientBuilder", "octave", "Octave", 5);
 }

@@ -133,7 +133,12 @@ function createNode(node, builderType)
     builder = builders[builderType][node.type];
     toAppend += "<div data-interface=\"" + builderType + "\" data-builder=\"" + node.type + "\"><h3>" + builder.display + "</h3>";
     builder.requirements.forEach(function(requirement){
-      toAppend += parseRequirement(requirement, node);
+      var n = undefined;
+      if (node.hasOwnProperty(requirement.attribute))
+      {
+        n = node[requirement.attribute];
+      }
+      toAppend += parseRequirement(requirement, n);
     });
     toAppend += "</div>";
   }
@@ -147,9 +152,9 @@ function parseRequirement(requirement, node)
   if (requirement.type == "int")
   {
     data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed simple\"><p>" + requirement.display + ": <input type=\"number\" onchange=\"updateTheme();\"";
-    if (node.hasOwnProperty(requirement.attribute))
+    if (node != undefined)
     {
-      data += " value=\"" + node[requirement.attribute] + "\"";
+      data += " value=\"" + node + "\"";
     }
     else if (requirement.hasOwnProperty("default"))
     {
@@ -161,9 +166,9 @@ function parseRequirement(requirement, node)
   {
     data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed map\"><h4>" + requirement.display + ":</h4>";
 
-    if (node.hasOwnProperty(requirement.attribute))
+    if (node != undefined)
     {
-      var map = node[requirement.attribute]
+      var map = node
       for (var index in map)
       {
         if (map.hasOwnProperty(index) && index)
@@ -174,7 +179,7 @@ function parseRequirement(requirement, node)
       }
     }
 
-    if (requirement.defaultElement && (!node.hasOwnProperty(requirement.attribute) || !node[requirement.attribute].hasOwnProperty("default")))
+    if (requirement.defaultElement && (node == undefined || !node.hasOwnProperty("default")))
     {
       data += "<p>Track: Default</p>";
       data += "<p>Track: <input type=\"text\" placeholder=\"deleted or none\" value=\"default\"> <button type=\"button\" onclick=\"updateTheme();\">set name or delete</button></p>";
@@ -187,11 +192,11 @@ function parseRequirement(requirement, node)
   }
   else if(requirement.type == "choice")
   {
-    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed simple\"><p>" + requirement.display + ": <select>"
+    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed simple\"><p>" + requirement.display + ": <select>";
     requirement.choices.forEach(function(choice)
     {
       data += "<option value=\"" + choice + "\"";
-      if (node.hasOwnProperty(requirement.attribute) && node[requirement.attribute] == choice)
+      if (node != undefined && node == choice)
       {
         data += " selected";
       }
@@ -199,19 +204,30 @@ function parseRequirement(requirement, node)
     });
     data += "</select></p></div>";
   }
+  else if (requirement.type == "array")
+  {
+    data += "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed map\"><p>" + requirement.display + ": <button type=\"button\" onclick=\"updateArray(this, 1)\">Add " + requirement.requirement.display + "</button><button type=\"button\" onclick=\"updateArray(this, -1)\">Remove Last " + requirement.requirement.display + "</button></p><div>";
+
+    if (node != undefined)
+    {
+      node.forEach(function(selectedNode){
+        data += parseRequirement(requirement.requirement, selectedNode);
+      });
+    }
+    data += "</div></div>";
+  }
   else
   {
     var i = 0;
-    if (node.hasOwnProperty(requirement.attribute))
+    if (node != undefined)
     {
-      node[requirement.attribute].forEach(function(selectedNode)
+      node.forEach(function(selectedNode)
       {
         data += createSelect(requirement, selectedNode);
         i+=1;
       });
     }
-    var noneNode = {type:"None"};
-    data += createSelect(requirement, noneNode);
+    data += createSelect(requirement, {type:"None"});
   }
 
   return data;
@@ -226,11 +242,9 @@ function createMap(requirement, mapNode)
     mapNode.forEach(function(selectedArray)
     {
       data += "<div class=\"boxed-map\">";
-      var j = 0;
       selectedArray.forEach(function(selectedNode)
       {
         data += createSelect(requirement.requirement, selectedNode);
-        j+=1;
       });
       var noneNode = {type:"None"};
       data += createSelect(requirement.requirement, noneNode);
@@ -270,6 +284,19 @@ function createSelect(requirement, selectedNode)
   return data + "</div>";
 }
 
+function updateArray(div, amount)
+{
+  if (amount == -1 && $(div).parent().parent().find("div").length > 0)
+  {
+    $(div).parent().parent().find("div").last().remove();
+  }
+  else if (amount == 1)
+  {
+    $(div).parent().parent().children("div").append("<div></div>");
+  }
+  updateTheme();
+}
+
 function updateSelect(select)
 {
   $(select).parent().parent().find("div").remove();
@@ -294,65 +321,79 @@ function getNode(div)
   node.type = div.attr("data-builder");
   builder.requirements.forEach(function(requirement)
   {
-    var attribute = div.find("[data-attribute='" + requirement.attribute + "']");
-    if (requirement.type == "int")
+    node[requirement.attribute] = getAttribute(requirement, div.find("[data-attribute='" + requirement.attribute + "']"));
+  });
+
+  return node;
+}
+
+function getAttribute(requirement, attribute)
+{
+  var node;
+  if (requirement.type == "int")
+  {
+    node = Number(attribute.find("p").find("input").val());
+  }
+  else if (requirement.type == "map")
+  {
+    var current = attribute.children().next();
+    node = {};
+    while (current.length > 0 && current.first().is("p"))
     {
-      node[requirement.attribute] = Number(attribute.find("p").find("input").val());
-    }
-    else if (requirement.type == "map")
-    {
-      var current = attribute.children().next();
-      node[requirement.attribute] = {};
-      while (current.length > 0 && current.first().is("p"))
+      var key = current.first().find("input").val();
+      current = current.next();
+      if (key != undefined && key.length > 0)
       {
-        var key = current.first().find("input").val();
-        current = current.next();
-        if (key != undefined && key.length > 0)
+        var submap = [];
+        while (current.first().is("div"))
         {
-          var submap = [];
-          while (current.first().is("div"))
+          var builderSet = [];
+          current.first().children("[data-attribute='sub-attribute']").each(function()
           {
-            var builderSet = [];
-            current.first().find("[data-attribute='undefined']").each(function()
+            if ($(this).find("p").find("select").val() != "None")
             {
-              if ($(this).find("p").find("select").val() != "None")
-              {
-                builderSet.push(getNode($(this).find("div")));
-              }
-            });
-            if (builderSet.length > 0)
-            {
-              submap.push(builderSet);
+              builderSet.push(getNode($(this).find("div")));
             }
-            current = current.next();
-          }
-          node[requirement.attribute][key] = submap;
-        }
-        else
-        {
-          while (current.first().is("div"))
+          });
+          if (builderSet.length > 0)
           {
-            current = current.next()
+            submap.push(builderSet);
           }
+          current = current.next();
+        }
+        node[key] = submap;
+      }
+      else
+      {
+        while (current.first().is("div"))
+        {
+          current = current.next()
         }
       }
     }
-    else if (requirement.type == "choice")
+  }
+  else if (requirement.type == "choice")
+  {
+    node = attribute.find("p").find("select").val();
+  }
+  else if(requirement.type == "array")
+  {
+    node = [];
+    attribute.find("div").find("div").each(function(){
+      node.push(getAttribute(requirement.requirement, $(this)));
+    });
+  }
+  else
+  {
+    node = [];
+    attribute.each(function()
     {
-      node[requirement.attribute] = attribute.find("p").find("select").val();
-    }
-    else
-    {
-      node[requirement.attribute] = [];
-      attribute.each(function()
+      if ($(this).find("p").find("select").val() != "None")
       {
-        if ($(this).find("p").find("select").val() != "None")
-        {
-          node[requirement.attribute].push(getNode($(this).find("div")));
-        }
-      });
-    }
-  });
+        node.push(getNode($(this).find("div")));
+      }
+    });
+  }
 
   return node;
 }

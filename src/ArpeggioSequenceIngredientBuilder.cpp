@@ -28,9 +28,10 @@ std::shared_ptr<IIngredient> ArpeggioSequenceIngredientBuilder::build()
 
 void ArpeggioSequenceIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "Arpeggio");
-  describer.registerIntRequirement("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "length", "Length", 16);
-  describer.registerIntRequirement("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "numNotes", "Number of Notes (0 for random)", 0);
-  describer.registerIntRequirement("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "numBeats", "Number of Beats (0 for random)", 0);
-  describer.registerIntRequirement("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "octave", "Octave", 0);
+  describer.registerBuilder("IngredientBuilder", "ArpeggioSequenceIngredientBuilder", "Arpeggio", { 
+    Describer::intRequirement("length", "Length", 16),
+    Describer::intRequirement("numNotes", "Number of Notes (0 for random)", 0),
+    Describer::intRequirement("numBeats", "Number of Beats (0 for random)", 0),
+    Describer::intRequirement("octave", "Octave", 0),
+  });
 }

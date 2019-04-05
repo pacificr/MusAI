@@ -16,6 +16,7 @@ std::shared_ptr<IGenerator> Theme::getGenerator()
 
 void Theme::registerWith(Describer& describer)
 {
-  describer.registerBuilder("Theme", "Theme", "Theme");
-  describer.registerBuilderRequirement("Theme", "Theme", "GeneratorBuilder", "generator", "Generator");
+  describer.registerBuilder("Theme", "Theme", "Theme", {
+    Describer::builderRequirement("GeneratorBuilder", "generator", "Generator")
+  });
 }

@@ -57,8 +57,9 @@ std::shared_ptr<IGenerator> StructuredGeneratorBuilder::build()
 
 void StructuredGeneratorBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("GeneratorBuilder", "StructuredGeneratorBuilder", "Structured Generator");
-  describer.registerIntRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "minSections", "Min Sections", 1);
-  describer.registerIntRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "maxSections", "Max Sections", 3);
-  describer.registerBuilderRequirement("GeneratorBuilder", "StructuredGeneratorBuilder", "NoteCollectionBuilder", "noteCollection", "Note Collection");
+  describer.registerBuilder("GeneratorBuilder", "StructuredGeneratorBuilder", "Structured Generator", {
+    Describer::intRequirement("minSections", "Min Sections", 1),
+    Describer::intRequirement("maxSections", "Max Sections", 3),
+    Describer::builderRequirement("NoteCollectionBuilder", "noteCollection", "Note Collection")
+  });
 }
