@@ -6,7 +6,7 @@
 std::shared_ptr<IIngredient> HarmonySequenceIngredientBuilder::build()
 {
   std::shared_ptr<PitchSequence> pc = std::make_shared<PitchSequence>();
-  std::shared_ptr<Rhythm> r = std::make_shared<Rhythm>(16);
+  std::shared_ptr<Rhythm> r = std::make_shared<Rhythm>(mNumBeats);
   for (int i = 0; i < 4; ++i)
   {
     pc->add(

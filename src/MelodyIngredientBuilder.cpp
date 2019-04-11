@@ -7,8 +7,8 @@ std::shared_ptr<IIngredient> MelodySequenceIngredientBuilder::build()
 {
   int pitch = mStartingPitch;
   std::shared_ptr<PitchSequence> pc = std::make_shared<PitchSequence>();
-  std::shared_ptr<Rhythm> rhythm = std::make_shared<Rhythm>(16);
-  for (unsigned int i = 0; i < mNumNotes; ++i)
+  std::shared_ptr<Rhythm> rhythm = std::make_shared<Rhythm>(mNumBeats);
+  for (unsigned int i = 0; i < mNumBeats; ++i)
   {
     pc->add(std::make_shared<Unison>(std::make_shared<ChordPitch>(pitch)));
     pitch += rand() % 3 - 1;

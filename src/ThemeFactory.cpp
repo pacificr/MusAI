@@ -11,6 +11,10 @@
 #include "../include/ChannelIngredientBuilder.h"
 #include "../include/TonicIngredientBuilder.h"
 #include "../include/BPMTempoIngredientBuilder.h"
+#include "../include/RandomTriadChordPoolBuilder.h"
+#include "../include/CustomChordPoolBuilder.h"
+#include "../include/CustomChordBuilder.h"
+#include "../include/ChordBuilder.h"
 
 #include <json.hpp>
 
@@ -22,23 +26,114 @@ namespace MusAI
   using json = nlohmann::json;
   Logger& logger = Logger::instance();
 
-  std::shared_ptr<IBuilder<IIngredient>> getIngredientBuilder(const json& j)
+  std::shared_ptr<IBuilder<Chord>> getChordBuilder(const json &j)
+  {
+    auto const chordBuilderType = j.find("type");
+    logger.log(LOC, *chordBuilderType);
+    if ("CustomChordBuilder" == *chordBuilderType)
+    {
+      auto chord = std::make_shared<CustomChordBuilder>();
+
+      auto const degreeArray = j.find("degrees");
+      if (degreeArray != j.end())
+        for (auto const& degree : *degreeArray)
+          chord->mDegrees.push_back(degree);
+
+      return chord;
+    }
+    else if ("ChordBuilder" == *chordBuilderType)
+    {
+      auto chord = std::make_shared<ChordBuilder>();
+
+      auto const octave = j.find("octave");
+      if (octave != j.end())
+        chord->mOctave = *octave;
+
+      auto const base = j.find("base");
+      if (base != j.end())
+        chord->mBase = *base;
+
+      auto const chordTitle = j.find("chordTitle");
+      if (chordTitle != j.end())
+        chord->mChordTitle = *chordTitle;
+
+      return chord;
+    }
+    logger.log(LOC, "Chord ================================= FAIL");
+    return nullptr;
+  }
+
+  std::shared_ptr<IBuilder<ChordPool>> getChordPoolBuilder(const json &j)
+  {
+    auto const chordPoolBuilderType = j.find("type");
+    logger.log(LOC, *chordPoolBuilderType);
+    if ("RandomTriadChordPoolBuilder" == *chordPoolBuilderType)
+    {
+      auto pool = std::make_shared<RandomTriadChordPoolBuilder>();
+      return pool;
+    }
+    else if ("CustomChordPoolBuilder" == *chordPoolBuilderType)
+    {
+      auto pool = std::make_shared<CustomChordPoolBuilder>();
+
+      auto const chords = j.find("chords");
+      if (chords == j.end())
+        logger.log(LOC, "chord not found, error");
+      else
+        for (auto const& builderSet : *chords)
+        {
+          std::shared_ptr<BuilderSet<Chord>> bs = std::make_shared<BuilderSet<Chord>>();
+          for (auto const& chord : builderSet)
+            bs->add(getChordBuilder(chord));
+          pool->addChord(bs);
+        }
+
+      return pool;
+    }
+
+    logger.log(LOC, "ChordPool ============================ FAIL");
+    return nullptr;
+  }
+
+  std::shared_ptr<IBuilder<IIngredient>> getIngredientBuilder(const json& j, unsigned int numBeats)
   {
     auto const ingredientBuilderType = j.find("type");
     logger.log(LOC, *ingredientBuilderType);
     if ("MelodySequenceIngredientBuilder" == *ingredientBuilderType)
     {
       auto builder = std::make_shared<MelodySequenceIngredientBuilder>();
+
+      builder->mNumBeats = numBeats;
+
       return builder;
     }
     else if ("HarmonySequenceIngredientBuilder"== *ingredientBuilderType)
     {
       auto builder = std::make_shared<HarmonySequenceIngredientBuilder>();
+
+      builder->mNumBeats = numBeats;
+
       return builder;
     }
     else if ("ProgressionIngredientBuilder" == *ingredientBuilderType)
     {
       auto builder = std::make_shared<ProgressionIngredientBuilder>();
+
+      auto const chordLength = j.find("chordLength");
+      if (chordLength != j.end())
+        builder->mChordLength = *chordLength;
+
+      auto const order = j.find("order");
+      if (order != j.end())
+        builder->mInOrder = *order == "In Order";
+
+      auto const chordPoolArray = j.find("chordPool");
+      if (chordPoolArray == j.end())
+        logger.log(LOC, "chord pool not found, use default");
+      else
+        for (auto const& chordPool : *chordPoolArray)
+          builder->addChordPool(getChordPoolBuilder(chordPool));
+
       return builder;
     }
     else if ("ScaleIngredientBuilder" == *ingredientBuilderType)
@@ -66,17 +161,15 @@ namespace MusAI
     {
       auto builder = std::make_shared<ArpeggioSequenceIngredientBuilder>();
 
-      auto const length = j.find("length");
-      if (length != j.end())
-        builder->mLength = *length;
+      builder->mNumBeats = numBeats;
 
       auto const numNotes = j.find("numNotes");
       if (numNotes != j.end())
         builder->mNumNotes = *numNotes;
 
-      auto const numBeats = j.find("numBeats");
-      if (numBeats != j.end())
-        builder->mNumBeats = *numBeats;
+      auto const overBeats = j.find("overBeats");
+      if (overBeats != j.end())
+        builder->mOverBeats = *overBeats;
 
       auto const octave = j.find("octave");
       if (octave != j.end())
@@ -127,11 +220,11 @@ namespace MusAI
     return nullptr;
   }
 
-  std::shared_ptr<BuilderSet<IIngredient>> getIngredientBuilderSet(const json& j)
+  std::shared_ptr<BuilderSet<IIngredient>> getIngredientBuilderSet(const json& j, unsigned int numBeats)
   {
     std::shared_ptr<BuilderSet<IIngredient>> builderSet = std::make_shared<BuilderSet<IIngredient>>();
     for (auto const& builder : j)
-      builderSet->add(getIngredientBuilder(builder));
+      builderSet->add(getIngredientBuilder(builder, numBeats));
     return builderSet;
   }
 
@@ -143,15 +236,15 @@ namespace MusAI
     {
       auto timelineNoteCollectionBuilder = std::make_shared<TimelineNoteCollectionBuilder>();
 
+      auto const length = j.find("length");
+      if (length != j.end())
+        timelineNoteCollectionBuilder->mLength = *length;
+
       auto const ingredients = j.find("ingredients");
       if (ingredients != j.end())
         for (auto& track : ingredients->items())
           for (auto const& builderArray : track.value())
-            timelineNoteCollectionBuilder->addIngredientBuilderSet(track.key(), getIngredientBuilderSet(builderArray));
-
-      auto const length = j.find("length");
-      if (length != j.end())
-        timelineNoteCollectionBuilder->mLength = *length;
+            timelineNoteCollectionBuilder->addIngredientBuilderSet(track.key(), getIngredientBuilderSet(builderArray, *length));
 
       return timelineNoteCollectionBuilder;
     }

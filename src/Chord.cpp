@@ -1,10 +1,7 @@
 #include "../include/Chord.h"
 
-Chord::Chord(std::vector<int> chordDegrees, bool useScale)
-{
-  mChordDegrees = chordDegrees;
-  mUseScale = useScale;
-}
+Chord::Chord(std::vector<int> chordDegrees, bool useScale, int startingScaleDegree)
+  : mChordDegrees(chordDegrees), mUseScale(useScale), mStartingScaleDegree(startingScaleDegree){}
 
 int Chord::resolveDegree(int index, Scale& scale) const
 {
@@ -16,11 +13,11 @@ int Chord::resolveDegree(int index, Scale& scale) const
 
   if (mUseScale)
   {
-    return scale.resolveDegree(degree + limit * scale.size());
+    return scale.resolveDegree(degree + mStartingScaleDegree + limit * scale.size());
   }
   else
   {
-    return degree + limit * 12;
+    return degree + limit * 12 + scale.resolveDegree(mStartingScaleDegree);
   }
 }
 

@@ -12,6 +12,10 @@
 #include "../include/ChannelIngredientBuilder.h"
 #include "../include/TonicIngredientBuilder.h"
 #include "../include/BPMTempoIngredientBuilder.h"
+#include "../include/RandomTriadChordPoolBuilder.h"
+#include "../include/CustomChordPoolBuilder.h"
+#include "../include/CustomChordBuilder.h"
+#include "../include/ChordBuilder.h"
 
 using json = nlohmann::json;
 
@@ -31,6 +35,10 @@ void Describer::registerDefaults()
   ChannelIngredientBuilder::registerWith(*this);
   TonicIngredientBuilder::registerWith(*this);
   BPMTempoIngredientBuilder::registerWith(*this);
+  RandomTriadChordPoolBuilder::registerWith(*this);
+  CustomChordPoolBuilder::registerWith(*this);
+  CustomChordBuilder::registerWith(*this);
+  ChordBuilder::registerWith(*this);
 }
 
 void Describer::registerBuilder(std::string builds, std::string identifier, std::string display, std::vector<json> requirements)

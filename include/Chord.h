@@ -10,8 +10,9 @@ class Chord
     std::vector<int> mChordDegrees;
   public:
     bool mUseScale;
+    int mStartingScaleDegree;
 
-    Chord(const std::vector<int>, bool useScale = true);
+    Chord(const std::vector<int>, bool useScale = true, int startingScaleDegree = 0);
     int resolveDegree(int, Scale&) const;
     unsigned int size() const;
 };

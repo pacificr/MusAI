@@ -57,6 +57,7 @@ function play()
   if (playing)
   {
     console.log("playing");
+    console.log(JSON.stringify(getTheme($("#root"))));
     generator = Module.getTheme(JSON.stringify(getTheme($("#root")))).getGenerator();
     startingPoint = Tone.now();
     updateTime();
@@ -73,7 +74,7 @@ function play()
 
 function scheduleNote(channel, note, duration, timing)
 {
-  console.log("Note: " + note.key + " " + duration + " at " + timing + " channel: " + channel);
+  //console.log("Note: " + note.key + " " + duration + " at " + timing + " channel: " + channel);
   synths[channel].triggerAttackRelease(Tone.Frequency(note.key, "midi"), duration, timing);
 }
 
@@ -211,7 +212,7 @@ function parseRequirement(requirement, node)
     if (node != undefined)
     {
       node.forEach(function(selectedNode){
-        data += parseRequirement(requirement.requirement, selectedNode);
+        data += "<div class=\"boxed-map\">" + parseRequirement(requirement.requirement, selectedNode) + "</div>";
       });
     }
     data += "</div></div>";
@@ -286,9 +287,9 @@ function createSelect(requirement, selectedNode)
 
 function updateArray(div, amount)
 {
-  if (amount == -1 && $(div).parent().parent().find("div").length > 0)
+  if (amount == -1 && $(div).parent().parent().children("div").length > 0)
   {
-    $(div).parent().parent().find("div").last().remove();
+    $(div).parent().parent().children("div").children("div").last().remove();
   }
   else if (amount == 1)
   {
@@ -299,7 +300,7 @@ function updateArray(div, amount)
 
 function updateSelect(select)
 {
-  $(select).parent().parent().find("div").remove();
+  $(select).parent().parent().children("div").remove();
   $(select).parent().parent().append(createNode({type: $(select).val()}, $(select).attr("data-builderType")));
   updateTheme();
 }
@@ -311,7 +312,7 @@ function updateTheme()
 
 function getTheme(root)
 {
-  return getNode(root.find("div"));
+  return getNode(root.children("div"));
 }
 
 function getNode(div)
@@ -321,7 +322,7 @@ function getNode(div)
   node.type = div.attr("data-builder");
   builder.requirements.forEach(function(requirement)
   {
-    node[requirement.attribute] = getAttribute(requirement, div.find("[data-attribute='" + requirement.attribute + "']"));
+    node[requirement.attribute] = getAttribute(requirement, div.children("[data-attribute='" + requirement.attribute + "']"));
   });
 
   return node;
@@ -332,7 +333,7 @@ function getAttribute(requirement, attribute)
   var node;
   if (requirement.type == "int")
   {
-    node = Number(attribute.find("p").find("input").val());
+    node = Number(attribute.children("p").children("input").val());
   }
   else if (requirement.type == "map")
   {
@@ -340,7 +341,7 @@ function getAttribute(requirement, attribute)
     node = {};
     while (current.length > 0 && current.first().is("p"))
     {
-      var key = current.first().find("input").val();
+      var key = current.first().children("input").val();
       current = current.next();
       if (key != undefined && key.length > 0)
       {
@@ -350,9 +351,9 @@ function getAttribute(requirement, attribute)
           var builderSet = [];
           current.first().children("[data-attribute='sub-attribute']").each(function()
           {
-            if ($(this).find("p").find("select").val() != "None")
+            if ($(this).children("p").children("select").val() != "None")
             {
-              builderSet.push(getNode($(this).find("div")));
+              builderSet.push(getNode($(this).children("div")));
             }
           });
           if (builderSet.length > 0)
@@ -374,13 +375,13 @@ function getAttribute(requirement, attribute)
   }
   else if (requirement.type == "choice")
   {
-    node = attribute.find("p").find("select").val();
+    node = attribute.children("p").children("select").val();
   }
   else if(requirement.type == "array")
   {
     node = [];
-    attribute.find("div").find("div").each(function(){
-      node.push(getAttribute(requirement.requirement, $(this)));
+    attribute.children("div").children("div").each(function(){
+      node.push(getAttribute(requirement.requirement, $(this).children("div")));
     });
   }
   else
@@ -388,9 +389,9 @@ function getAttribute(requirement, attribute)
     node = [];
     attribute.each(function()
     {
-      if ($(this).find("p").find("select").val() != "None")
+      if ($(this).children("p").children("select").val() != "None")// && $(this).children("div").length > 0)
       {
-        node.push(getNode($(this).find("div")));
+        node.push(getNode($(this).children("div")));
       }
     });
   }
