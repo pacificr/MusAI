@@ -1,29 +1,55 @@
+body{
+  font-family: Gadget, sans-serif;
+  background-color: #DEC78B;
+  max-width: 1100px;
+  padding-left: 2em;
+  padding-right: 2em;
+  margin: 0 auto;
+}
+
+button {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+h1 {
+  font-family: monospace, monospace;
+  font-size: 64px;
+}
+
 .boxed{
-  border-style: solid;
-  border-width: 2px;
   margin: 2px;
-  padding: 2px;
+  padding: 1px;
+  padding-left: 1em;
 }
 
 .boxed-map{
   border-style: dotted;
   border-width: 2px;
-  margin: 2px;
-  padding: 2px;
+  border-color: #DEC78B;
+  margin: 1px;
+  padding: 1px;
+  margin-bottom: 1em;
 }
 
-body{
-  background-color: #efefef;
+.button-box {
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 .simple{
-  background-color: #82abb2;
+  background-color: #76C7A3;
 }
 
 .map{
-  background-color: #8982b2;
+  background-color: #BD707B;
 }
 
 .builder{
-  background-color: #8293b2;
+  background-color: #829996;
+}
+
+#root {
+  border-style: solid;
+  border-width: 3px;
 }

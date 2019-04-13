@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="UTF-8"> 
+<html>
+  <head>
+    <title>MusAI</title>
+    <link rel="stylesheet" type="text/css" href="web/style.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://tonejs.github.io/build/Tone.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.6-rc.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.6-rc.1/dist/js/select2.min.js"></script>
+    <script src="web/frontend.js"></script>
+    <script src="test/themes.js"></script>
+  </head>
+  <body>
+    <a hidden id="dl"></a>
+    <center><h1>MusAI</h1></center>
+    <center>
+      <div class="button-box">
+        <button type="button" id="play" onclick="play()">Play</button>
+        <button type="button" id="edit" onclick="toggleEdit()">Edit</button>
+      </div>
+    </center>
+    <div><center><select id="themeList" onchange="selectTheme(this.options[this.selectedIndex].value)"></select></center></div>
+
+    <div id="editorDiv" hidden>
+      <center>
+        <div class="button-box">
+          <button type="button" onclick="saveAs()">Save As</button>
+          <button type="button" onclick="save()">Save</button>
+          <button type="button" onclick="deleteCurrent()">Delete</button>
+          <button onclick="download()">Download</button>
+          Upload: <input type="file" multiple onchange="loadFiles(event);"/>
+          <button type="button" onclick="help()">Help</button>
+        </div>
+      </center>
+      <div id="helpDiv" hidden>
+        <p>Instruments:</p>
+        <ul>
+          <li>Channel 0. Synth</li>
+          <li>Channel 1. AMSynth</li>
+          <li>Channel 2. DuoSynth</li>
+          <li>Channel 3. FMSynth</li>
+          <li>Channel 4. MonoSynth</li>
+        </u>
+      </div>
+      <div id="root" class="boxed builder"></div>
+    </div>
+
+    <script>
+      var Module = {
+        onRuntimeInitialized: function(){
+          setModule(Module);
+          setTone(Tone);
+          var describer = new Module.Describer();
+          describer.registerDefaults();
+          setBuilders(describer.getDescription());
+          $("#themeList").trigger("change");
+        }
+      }
+    </script>
+    <script src="js/MusAI.js"></script>
+  </body>
+</html>

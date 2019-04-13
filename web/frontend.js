@@ -1,4 +1,4 @@
-
+var themes = {};
 
 var generator;
 
@@ -14,6 +14,105 @@ var playing = false;
 var synths;
 
 let voicesPerSynth = 5;
+
+//========================================================================================================
+
+$(document).ready(function() {
+  $('#themeList').select2({width: '90%'});
+  for (var name in presets)
+    if (presets.hasOwnProperty(name))
+    {
+      themes[name] = JSON.parse(presets[name]);
+      updateThemeList(name);
+    }
+});
+
+function saveAs()
+{
+  var name = prompt("Save as:");
+  if (name != undefined)
+    {
+    if (themes.hasOwnProperty(name))
+    {
+      if (confirm(name + " is already a theme, overwrite?"))
+      {
+        themes[name] = getTheme($("#root"));
+      }
+    }
+    else
+    {
+      themes[name] = getTheme($("#root"));
+    }
+    updateThemeList(name);
+  }
+}
+
+function save()
+{
+  var name = $("#themeList").val();
+  themes[name] = getTheme($("#root"));
+  alert("Saved " + name);
+}
+
+function deleteCurrent()
+{
+  var name = $("#themeList").val();
+  delete themes[name];
+  $("#themeList option[value='" + name + "']").remove();
+  $("#themeList").trigger("change");
+}
+
+function updateThemeList(current)
+{
+  $("#themeList").html('');
+  Object.getOwnPropertyNames(themes).forEach(function(theme){
+    $("#themeList").append(new Option(theme, theme, true, true));
+  });
+  if (current != undefined)
+    $("#themeList").val(current);
+}
+
+function download()
+{
+  downloadJson($("#themeList").val(), JSON.stringify(getTheme($("#root"))));
+}
+
+function downloadJson(name, j)
+{
+  $("#dl").attr("href", "data:application/json," + encodeURIComponent(j));
+  $("#dl").attr("download", name + ".json");
+  document.getElementById("dl").click();
+}
+
+function loadFiles(evt) {
+  var files = evt.target.files;
+  for (var i = 0; i < files.length; i++) {
+    var reader = new FileReader();
+    reader.onload = (function(file){
+      return function(e){
+        var name = file.name.slice(0, -5);
+        var data = e.target.result;
+        if (!themes.hasOwnProperty(name) || confirm(name + " already exists, overwrite?"))
+        {
+          themes[name] = JSON.parse(data);
+          displayTheme($("#root"), JSON.parse(data));
+          updateThemeList(name);
+        }
+      }
+    })(files[i]);
+    reader.readAsText(files[i]);
+  };
+}
+
+function help()
+{
+  $("#helpDiv").toggle();
+}
+
+function selectTheme(value)
+{
+  displayTheme($("#root"), themes[value]);
+}
 
 function setModule(module)
 {
@@ -41,16 +140,6 @@ function setSynths()
   synths.push(new Tone.PolySynth(voicesPerSynth, Tone.MonoSynth).toMaster());
 }
 
-function save()
-{
-  $("#data").val(JSON.stringify(getTheme($("#root"))));
-}
-
-function load()
-{
-  displayTheme($("#root"), JSON.parse($("#data").val()));
-}
-
 function play()
 {
   playing = !playing;
@@ -68,9 +157,26 @@ function play()
     synths.forEach(function(synth){
       synth.releaseAll();
     });
-    $("#play").html("Play");
+    $("#play").html("Stopping...");
+    $("#play").prop("disabled", true);
+    setTimeout(function(){
+      $("#play").html("Play");
+      $("#play").prop("disabled", false);
+    }, 2000);
   } 
 }
+
+function toggleEdit()
+{
+  $("#editorDiv").toggle("slow", "swing", function(){
+    if ($("#editorDiv").is(":visible"))
+      $("#edit").html("Hide Editor");
+    else
+      $("#edit").html("Edit");
+  });
+}
+
+//========================================================================================================
 
 function scheduleNote(channel, note, duration, timing)
 {
@@ -82,9 +188,7 @@ function updateTime(){
   if (playing)
   {
     requestAnimationFrame(updateTime);
-  }
-
-  $("#test").text((Tone.now() - startingPoint).toFixed(3));
+  } 
 
   if (Tone.now() >= nextUpdate)
   {
@@ -117,6 +221,8 @@ function updateTime(){
     }
   }
 }
+
+//========================================================================================================
 
 function displayTheme(div, node)
 {
@@ -228,7 +334,7 @@ function parseRequirement(requirement, node)
         i+=1;
       });
     }
-    data += createSelect(requirement, {type:"None"});
+    data += createSelect(requirement, {type:"None"}, i != 0);
   }
 
   return data;
@@ -248,21 +354,24 @@ function createMap(requirement, mapNode)
         data += createSelect(requirement.requirement, selectedNode);
       });
       var noneNode = {type:"None"};
-      data += createSelect(requirement.requirement, noneNode);
+      data += createSelect(requirement.requirement, noneNode, true);
       data += "</div>";
       i+=1;
     });
   }
   data += "<div class=\"boxed-map\">"
   var noneNode = {type:"None"};
-  data += createSelect(requirement.requirement, noneNode);
+  data += createSelect(requirement.requirement, noneNode, i != 0);
   data += "</div>";
   return data;
 }
 
-function createSelect(requirement, selectedNode)
+function createSelect(requirement, selectedNode, extra = false)
 {
-  var data = "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed builder\"><p>" + requirement.display + ": <select data-builderType=\"" + requirement.type + "\" onchange=\"updateSelect(this);\"><option value=\"None\">None</option>";
+  var data = "<div data-attribute=\"" + requirement.attribute + "\" class=\"boxed builder\"><p>";
+  if (extra)
+    data += "(Optional) ";
+  data += requirement.display + ": <select data-builderType=\"" + requirement.type + "\" onchange=\"updateSelect(this);\"><option value=\"None\">None</option>";
   var builder = builders[requirement.type];
   for (var prop in builder)
   {
