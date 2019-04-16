@@ -34,6 +34,14 @@ namespace MusAI
     {
       auto chord = std::make_shared<CustomChordBuilder>();
 
+      auto const degreeType = j.find("degreeType");
+      if (degreeType != j.end())
+        chord->mUseScale = *degreeType == "Scale Degrees";
+
+      auto const randomStartingDegree = j.find("randomStartingDegree");
+      if (randomStartingDegree != j.end())
+        chord->mRandomStartingDegree = *randomStartingDegree == "YES";
+
       auto const degreeArray = j.find("degrees");
       if (degreeArray != j.end())
         for (auto const& degree : *degreeArray)
@@ -175,6 +183,10 @@ namespace MusAI
       if (octave != j.end())
         builder->mOctave = *octave;
 
+      auto const direction = j.find("direction");
+      if (direction != j.end())
+        builder->mDirection = *direction;
+
       return builder;
     }
     else if ("ChannelIngredientBuilder" == *ingredientBuilderType)
@@ -261,6 +273,16 @@ namespace MusAI
     {
       auto structuredGeneratorBuilder = std::make_shared<StructuredGeneratorBuilder>();
 
+      auto const fixedSections = j.find("fixedSections");
+      if (fixedSections != j.end())
+        for (auto const& builderSet : *fixedSections)
+        {
+          std::shared_ptr<BuilderSet<INoteCollection>> bs = std::make_shared<BuilderSet<INoteCollection>>();
+          for (auto const& fixedSection : builderSet)
+            bs->add(getNoteCollectionBuilder(fixedSection));
+          structuredGeneratorBuilder->addFixedNoteCollectionBuilder(bs);
+        }
+
       auto const minSections = j.find("minSections");
       if (minSections != j.end())
         structuredGeneratorBuilder->mMinSections = *minSections;
@@ -287,6 +309,24 @@ namespace MusAI
   {
     json j = json::parse(json_data);
     auto theme = std::make_shared<Theme>();
+
+    auto const globalTempo = j.find("tempo");
+    if (globalTempo != j.end())
+      Timeline::gDefaultTempo = getIngredientBuilderSet(*globalTempo, 0)->get();
+    if (Timeline::gDefaultTempo == nullptr)
+      Timeline::gDefaultTempo = BPMTempoIngredientBuilder().build();
+
+    auto const globalTonic = j.find("tonic");
+    if (globalTonic != j.end())
+      Timeline::gDefaultTonic = getIngredientBuilderSet(*globalTonic, 0)->get();
+    if (Timeline::gDefaultTonic == nullptr)
+      Timeline::gDefaultTonic = TonicIngredientBuilder().build();
+
+    auto const globalScale = j.find("scale");
+    if (globalScale != j.end())
+      Timeline::gDefaultScale = getIngredientBuilderSet(*globalScale, 0)->get();
+    if (Timeline::gDefaultScale == nullptr)
+      Timeline::gDefaultScale = ScaleIngredientBuilder().build();
 
     auto const generatorArray = j.find("generator");
     if (generatorArray == j.end())

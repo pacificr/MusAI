@@ -12,6 +12,7 @@ class ArpeggioSequenceIngredientBuilder : public IBuilder<IIngredient>
     int mNumNotes;
     int mOverBeats;
     int mOctave;
+    std::string mDirection;
     std::shared_ptr<IIngredient> build();
     static void registerWith(Describer&);
 };

@@ -12,6 +12,7 @@ class Describer
 
     void registerDefaults();
     void registerBuilder(std::string builds, std::string identifier, std::string display, std::vector<nlohmann::json> requirements);
+    void registerBuilderMultiple(std::vector<std::string> builds, std::string identifier, std::string display, std::vector<nlohmann::json> requirements);
     static nlohmann::json intRequirement(std::string attribute, std::string display, int defaultValue);
     static nlohmann::json mapRequirement(std::string attribute, std::string display, nlohmann::json requirement, bool defaultElement = true);
     static nlohmann::json choiceRequirement(std::string attribute, std::string display, std::vector<std::string> choices);

@@ -1,9 +1,6 @@
 #include "../include/TimelineNoteCollectionBuilder.h"
 
 #include "../include/TimelineNoteCollection.h"
-#include "../include/ProgressionIngredientBuilder.h"
-#include "../include/MelodySequenceIngredientBuilder.h"
-#include "../include/HarmonySequenceIngredientBuilder.h"
 
 void TimelineNoteCollectionBuilder::addIngredientBuilderSet(std::string track, std::shared_ptr<BuilderSet<IIngredient>> ingredientBuilderSet)
 {

@@ -8,6 +8,8 @@
 class CustomChordBuilder : public IBuilder<Chord>
 {
   public:
+    bool mUseScale;
+    bool mRandomStartingDegree;
     std::vector<int> mDegrees;
     std::shared_ptr<Chord> build();
     static void registerWith(Describer&);

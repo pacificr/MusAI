@@ -7,6 +7,7 @@ static const std::string FOUR = "IV";
 static const std::string FIVE = "V";
 static const std::string SIX = "VI";
 static const std::string SEVEN = "VII";
+static const std::string RANDOM = "Random";
 
 static const std::string MAJOR = "Maj";
 static const std::string MINOR = "min";
@@ -38,6 +39,8 @@ std::shared_ptr<Chord> ChordBuilder::build()
     base = 5;
   else if (mBase == SEVEN)
     base = 6;
+  else if (mBase == RANDOM)
+    base = rand() % 7;
 
   std::vector<int> degrees;
   if (mChordTitle == MAJOR)
@@ -85,7 +88,8 @@ void ChordBuilder::registerWith(Describer& describer)
       FOUR,
       FIVE,
       SIX,
-      SEVEN
+      SEVEN,
+      RANDOM
     }),
     Describer::choiceRequirement("chordTitle", "Chord", {
       MAJOR,

@@ -46,7 +46,7 @@ std::shared_ptr<IIngredient> ScaleIngredientBuilder::build()
 
 void ScaleIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "ScaleIngredientBuilder", "Scale", {
+  describer.registerBuilderMultiple({"IngredientBuilder", "GlobalScale"}, "ScaleIngredientBuilder", "Scale", {
     Describer::choiceRequirement("scale", "Scale", {
       MAJOR,
       MINOR,

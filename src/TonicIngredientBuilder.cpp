@@ -60,7 +60,7 @@ std::shared_ptr<IIngredient> TonicIngredientBuilder::build()
 
 void TonicIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "TonicIngredientBuilder", "Tonic", {
+  describer.registerBuilderMultiple({"IngredientBuilder", "GlobalTonic"}, "TonicIngredientBuilder", "Tonic", {
     Describer::choiceRequirement("tonic", "Tonic", {
       RANDOM,
       C,

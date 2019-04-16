@@ -13,6 +13,8 @@
 #include <set>
 #include <string>
 
+class IIngredient;
+
 class Timeline
 {
   private:
@@ -28,8 +30,12 @@ class Timeline
     std::map<std::string, TimelineTrack<Rhythm>> mRhythms;
     std::map<std::string, TimelineTrack<int>> mChannels;
 
-    void addTrackNow(std::string);
+   void addTrackNow(std::string);
   public:
+    static std::shared_ptr<IIngredient> gDefaultTempo;
+    static std::shared_ptr<IIngredient> gDefaultTonic;
+    static std::shared_ptr<IIngredient> gDefaultScale;
+
     Timeline(int, bool);
 
     void addTrack(std::string);

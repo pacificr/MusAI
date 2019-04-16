@@ -238,7 +238,7 @@ function createNode(node, builderType)
   if (node.type != "None")
   {
     builder = builders[builderType][node.type];
-    toAppend += "<div data-interface=\"" + builderType + "\" data-builder=\"" + node.type + "\"><h3>" + builder.display + "</h3>";
+    toAppend += "<div data-interface=\"" + builderType + "\" data-builder=\"" + node.type + "\">";
     builder.requirements.forEach(function(requirement){
       var n = undefined;
       if (node.hasOwnProperty(requirement.attribute))

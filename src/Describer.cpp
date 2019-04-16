@@ -53,6 +53,12 @@ void Describer::registerBuilder(std::string builds, std::string identifier, std:
   description[builds][identifier]["requirements"] = requirements;
 }
 
+void Describer::registerBuilderMultiple(std::vector<std::string> builds, std::string identifier, std::string display, std::vector<json> requirements)
+{
+  for (auto b : builds)
+    registerBuilder(b, identifier, display, requirements);
+}
+
 json Describer::intRequirement(std::string attribute, std::string display, int defaultValue)
 {
   return {

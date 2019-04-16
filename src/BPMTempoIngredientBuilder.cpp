@@ -11,7 +11,7 @@ std::shared_ptr<IIngredient> BPMTempoIngredientBuilder::build()
 
 void BPMTempoIngredientBuilder::registerWith(Describer& describer)
 {
-  describer.registerBuilder("IngredientBuilder", "BPMTempoIngredientBuilder", "BPM", {
+  describer.registerBuilderMultiple({"IngredientBuilder", "GlobalTempo"}, "BPMTempoIngredientBuilder", "BPM", {
     Describer::intRequirement("minBPM", "Min BPM", 60),
     Describer::intRequirement("maxBPM", "Max BPM", 120),
   });

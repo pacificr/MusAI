@@ -17,10 +17,15 @@ template <typename T> class BuilderSet
     }
     void randomize()
     {
-      unsigned int choice = rand() % mSet.size();
-      auto objectIt = mSet.begin();
-      std::advance(objectIt, choice);
-      mObject = (*objectIt)->build();
+      if (mSet.size() < 1)
+        mObject = nullptr;
+      else
+      {
+        unsigned int choice = rand() % mSet.size();
+        auto objectIt = mSet.begin();
+        std::advance(objectIt, choice);
+        mObject = (*objectIt)->build();
+      }
     }
     std::shared_ptr<T> get()
     {

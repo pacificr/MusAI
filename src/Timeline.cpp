@@ -1,9 +1,6 @@
 #include "../include/Timeline.h"
 
-#include "../include/BPMTempoIngredientBuilder.h"
-#include "../include/TonicIngredientBuilder.h"
 #include "../include/ChannelIngredientBuilder.h"
-#include "../include/ScaleIngredientBuilder.h"
 #include "../include/ProgressionIngredientBuilder.h"
 #include "../include/MelodySequenceIngredientBuilder.h"
 
@@ -11,6 +8,10 @@
 
 #include "../include/Logger.h"
 #define LOC "timeline"
+
+std::shared_ptr<IIngredient> Timeline::gDefaultTempo = nullptr;
+std::shared_ptr<IIngredient> Timeline::gDefaultTonic = nullptr;
+std::shared_ptr<IIngredient> Timeline::gDefaultScale = nullptr;
 
 Timeline::Timeline(int length, bool useSlowest)
   : mLength(length), mUseSlowestTempo(useSlowest)
@@ -137,7 +138,7 @@ std::vector<Note> Timeline::getNotes(std::string track)
       scale = mScales.at("default").getObject(t);
     if (NULL == scale)
     {
-      ScaleIngredientBuilder().build()->apply(*this, "default");
+      gDefaultScale->apply(*this, "default");
       scale = mScales.at("default").getObject(t);
     }
 
@@ -155,7 +156,7 @@ std::vector<Note> Timeline::getNotes(std::string track)
       tempo = mTempos.at("default").getObject(t);
     if (NULL == tempo)
     {
-      BPMTempoIngredientBuilder().build()->apply(*this, "default");
+      gDefaultTempo->apply(*this, "default");
       tempo = mTempos.at("default").getObject(t);
     }
 
@@ -164,7 +165,7 @@ std::vector<Note> Timeline::getNotes(std::string track)
       tonic = mTonics.at("default").getObject(t);
     if (NULL == tonic)
     {
-      TonicIngredientBuilder().build()->apply(*this, "default");
+      gDefaultTonic->apply(*this, "default");
       tonic = mTonics.at("default").getObject(t);
     }
 
