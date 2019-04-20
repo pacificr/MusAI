@@ -19,13 +19,34 @@ let voicesPerSynth = 5;
 
 $(document).ready(function() {
   $('#themeList').select2({width: '90%'});
+  if (typeof(Storage) !== "undefined" && localStorage.getItem("themes") != null)
+  {
+    themes = JSON.parse(localStorage.getItem("themes"));
+    updateThemeList();
+  }
+  else
+  {
   for (var name in presets)
     if (presets.hasOwnProperty(name))
     {
       themes[name] = JSON.parse(presets[name]);
       updateThemeList(name);
     }
+  }
 });
+
+function reset()
+{
+  if (typeof(Storage) !== undefined)
+    localStorage.clear()
+  location.reload();
+}
+
+function saveLocalStorage()
+{
+  if (typeof(Storage) !== "undefined")
+    localStorage.setItem("themes", JSON.stringify(themes));
+}
 
 function saveAs()
 {
@@ -52,6 +73,7 @@ function save()
   var name = $("#themeList").val();
   themes[name] = getTheme($("#root"));
   alert("Saved " + name);
+  saveLocalStorage();
 }
 
 function deleteCurrent()
@@ -60,6 +82,7 @@ function deleteCurrent()
   delete themes[name];
   $("#themeList option[value='" + name + "']").remove();
   $("#themeList").trigger("change");
+  saveLocalStorage();
 }
 
 function updateThemeList(current)
@@ -70,6 +93,7 @@ function updateThemeList(current)
   });
   if (current != undefined)
     $("#themeList").val(current);
+  saveLocalStorage();
 }
 
 function download()
