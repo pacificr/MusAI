@@ -7,10 +7,11 @@
 
 class MelodySequenceIngredientBuilder : public IBuilder<IIngredient>
 {
-  private:
-    int mStartingPitch = 0;
   public:
     unsigned int mNumBeats = 16;
+    std::string mPitchStyle = "Random";
+    std::string mRhythmStyle = "Quarter Notes";
+    int mOctave = 0;
     std::shared_ptr<IIngredient> build();
     static void registerWith(Describer&);
 };

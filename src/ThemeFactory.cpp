@@ -113,6 +113,18 @@ namespace MusAI
 
       builder->mNumBeats = numBeats;
 
+      auto const pitchStyle = j.find("pitchStyle");
+      if (pitchStyle != j.end())
+        builder->mPitchStyle = *pitchStyle;
+
+      auto const rhythmStyle = j.find("rhythmStyle");
+      if (rhythmStyle != j.end())
+        builder->mRhythmStyle = *rhythmStyle;
+
+      auto const octave = j.find("octave");
+      if (octave != j.end())
+        builder->mOctave = *octave;
+
       return builder;
     }
     else if ("HarmonySequenceIngredientBuilder"== *ingredientBuilderType)
@@ -120,6 +132,18 @@ namespace MusAI
       auto builder = std::make_shared<HarmonySequenceIngredientBuilder>();
 
       builder->mNumBeats = numBeats;
+
+      auto const chordLength = j.find("chordLength");
+      if (chordLength != j.end())
+        builder->mChordLength = *chordLength;
+
+      auto const notesPerChord = j.find("notesPerChord");
+      if (notesPerChord != j.end())
+        builder->mNotesPerChord = *notesPerChord;
+
+      auto const octave = j.find("octave");
+      if (octave != j.end())
+        builder->mOctave = *octave;
 
       return builder;
     }

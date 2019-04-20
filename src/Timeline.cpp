@@ -107,9 +107,9 @@ std::vector<Note> Timeline::getNotes(std::string track)
   std::vector<Note> notes; 
 
   std::shared_ptr<Rhythm> rhythm = mRhythms.at(track).getObject(currentBeat);
-  if (NULL == rhythm)
+  if (nullptr == rhythm)
     rhythm = mRhythms.at("default").getObject(currentBeat);
-  if (NULL == rhythm)
+  if (nullptr == rhythm)
   {
     MelodySequenceIngredientBuilder().build()->apply(*this, "default");
     rhythm = mRhythms.at("default").getObject(currentBeat);
@@ -120,9 +120,9 @@ std::vector<Note> Timeline::getNotes(std::string track)
     int t = currentBeat + floor(rhythmicNote.getStart());
 
     std::shared_ptr<PitchSequence> pitches = mPitchSequences.at(track).getObject(t);
-    if (NULL == pitches)
+    if (nullptr == pitches)
       pitches = mPitchSequences.at("default").getObject(t);
-    if (NULL == pitches)
+    if (nullptr == pitches)
     {
       MelodySequenceIngredientBuilder().build()->apply(*this, "default");
       pitches = mPitchSequences.at("default").getObject(t);
@@ -134,45 +134,45 @@ std::vector<Note> Timeline::getNotes(std::string track)
       currentPitch = 0;
     }*/
     std::shared_ptr<Scale> scale = mScales.at(track).getObject(t);
-    if (NULL == scale)
+    if (nullptr == scale)
       scale = mScales.at("default").getObject(t);
-    if (NULL == scale)
+    if (nullptr == scale)
     {
       gDefaultScale->apply(*this, "default");
       scale = mScales.at("default").getObject(t);
     }
 
     std::shared_ptr<Chord> chord = mChords.at(track).getObject(t);
-    if (NULL == chord)
+    if (nullptr == chord)
       chord = mChords.at("default").getObject(t);
-    if (NULL == chord)
+    if (nullptr == chord)
     {
       ProgressionIngredientBuilder().build()->apply(*this, "default");
       chord = mChords.at("default").getObject(t);
     }
 
     std::shared_ptr<Tempo> tempo = mTempos.at(track).getObject(t);
-    if (NULL == tempo)
+    if (nullptr == tempo)
       tempo = mTempos.at("default").getObject(t);
-    if (NULL == tempo)
+    if (nullptr == tempo)
     {
       gDefaultTempo->apply(*this, "default");
       tempo = mTempos.at("default").getObject(t);
     }
 
     std::shared_ptr<Tonic> tonic = mTonics.at(track).getObject(t);
-    if (NULL == tonic)
+    if (nullptr == tonic)
       tonic = mTonics.at("default").getObject(t);
-    if (NULL == tonic)
+    if (nullptr == tonic)
     {
       gDefaultTonic->apply(*this, "default");
       tonic = mTonics.at("default").getObject(t);
     }
 
     std::shared_ptr<int> channel = mChannels.at(track).getObject(t);
-    if (NULL == channel)
+    if (nullptr == channel)
       channel = mChannels.at("default").getObject(t);
-    if (NULL == channel)
+    if (nullptr == channel)
     {
       ChannelIngredientBuilder().build()->apply(*this, "default");
       channel = mChannels.at("default").getObject(t);

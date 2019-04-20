@@ -21,11 +21,11 @@ int main(int argc, char* argv[])
   std::string testJsonString;
   std::getline(testJson, testJsonString);
 
-  logger.log(LOC, testJsonString);
+  logger.log(LOC, "Input: " + testJsonString + "\n");
 
   Describer d;
   d.registerDefaults();
-  logger.log(LOC, d.getDescription());
+  logger.log(LOC, "Description:" + d.getDescription() + "\n");
 
   std::shared_ptr<Theme> theme = MusAI::getTheme(testJsonString);
 
