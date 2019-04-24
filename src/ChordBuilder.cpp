@@ -16,6 +16,8 @@ static const std::string MAJOR_SEVENTH = "M7";
 static const std::string MINOR_SEVENTH = "m7";
 static const std::string DIMINISHED_SEVENTH = "dim7";
 static const std::string DOMINANT_SEVENTH = "Dominant7";
+static const std::string OPEN_FOURTH = "Open Fourth";
+static const std::string OPEN_FIFTH = "Open Fifth";
 static const std::string SUSPENDED_2 = "Sus2";
 static const std::string SUSPENDED_4 = "Sus4";
 static const std::string AUGMENTED = "Aug";
@@ -57,6 +59,10 @@ std::shared_ptr<Chord> ChordBuilder::build()
     degrees = {0, 3, 6, 9};
   else if (mChordTitle == DOMINANT_SEVENTH)
     degrees = {0, 4, 7, 10};
+  else if (mChordTitle == OPEN_FOURTH)
+    degrees = {0, 5};
+  else if (mChordTitle == OPEN_FIFTH)
+    degrees = {0, 7};
   else if (mChordTitle == SUSPENDED_2)
     degrees = {0, 2, 7};
   else if (mChordTitle == SUSPENDED_4)

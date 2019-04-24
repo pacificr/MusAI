@@ -13,12 +13,12 @@ var playing = false;
 
 var synths;
 
-let voicesPerSynth = 5;
+let voicesPerSynth = 6;
 
 //========================================================================================================
 
 $(document).ready(function() {
-  $('#themeList').select2({width: '90%'});
+  $('#themeList').select2({width: '75%'});
   if (typeof(Storage) !== "undefined" && localStorage.getItem("themes") != null)
   {
     themes = JSON.parse(localStorage.getItem("themes"));

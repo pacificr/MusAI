@@ -13,6 +13,7 @@ class ProgressionIngredientBuilder : public IBuilder<IIngredient>
     BuilderSet<ChordPool> mChordPool;
   public:
     int mChordLength = 4;
+    int mNumBeats = 64;
     bool mInOrder = false;
     ProgressionIngredientBuilder& addChordPool(std::shared_ptr<IBuilder<ChordPool>>);
     std::shared_ptr<IIngredient> build();

@@ -5,7 +5,7 @@
 
 #include "Describer.h"
 
-class RandomTriadChordPoolBuilder : public IBuilder<ChordPool>
+class TriadChordPoolBuilder : public IBuilder<ChordPool>
 {
   public:
     std::shared_ptr<ChordPool> build();

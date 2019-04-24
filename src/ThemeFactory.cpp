@@ -11,7 +11,7 @@
 #include "../include/ChannelIngredientBuilder.h"
 #include "../include/TonicIngredientBuilder.h"
 #include "../include/BPMTempoIngredientBuilder.h"
-#include "../include/RandomTriadChordPoolBuilder.h"
+#include "../include/TriadChordPoolBuilder.h"
 #include "../include/CustomChordPoolBuilder.h"
 #include "../include/CustomChordBuilder.h"
 #include "../include/ChordBuilder.h"
@@ -75,9 +75,9 @@ namespace MusAI
   {
     auto const chordPoolBuilderType = j.find("type");
     logger.log(LOC, *chordPoolBuilderType);
-    if ("RandomTriadChordPoolBuilder" == *chordPoolBuilderType)
+    if ("TriadChordPoolBuilder" == *chordPoolBuilderType)
     {
-      auto pool = std::make_shared<RandomTriadChordPoolBuilder>();
+      auto pool = std::make_shared<TriadChordPoolBuilder>();
       return pool;
     }
     else if ("CustomChordPoolBuilder" == *chordPoolBuilderType)
@@ -150,6 +150,8 @@ namespace MusAI
     else if ("ProgressionIngredientBuilder" == *ingredientBuilderType)
     {
       auto builder = std::make_shared<ProgressionIngredientBuilder>();
+
+      builder->mNumBeats = numBeats;
 
       auto const chordLength = j.find("chordLength");
       if (chordLength != j.end())

@@ -76,8 +76,8 @@ void StructuredGeneratorBuilder::registerWith(Describer& describer)
   describer.registerBuilder("GeneratorBuilder", "StructuredGeneratorBuilder", "Structured Generator", {
     Describer::arrayRequirement("fixedSections", "Fixed Sections", 
       Describer::builderRequirement("NoteCollectionBuilder", Describer::SUB_ATTRIBUTE, "Note Collection")),
-    Describer::intRequirement("minSections", "Minimum Random Sections", 1),
-    Describer::intRequirement("maxSections", "Maximum Random Sections", 3),
+    Describer::intRequirement("minSections", "Minimum Random Sections", 3),
+    Describer::intRequirement("maxSections", "Maximum Random Sections", 4),
     Describer::builderRequirement("NoteCollectionBuilder", "noteCollection", "Random Note Collection")
   });
 }

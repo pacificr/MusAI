@@ -12,7 +12,7 @@
 #include "../include/ChannelIngredientBuilder.h"
 #include "../include/TonicIngredientBuilder.h"
 #include "../include/BPMTempoIngredientBuilder.h"
-#include "../include/RandomTriadChordPoolBuilder.h"
+#include "../include/TriadChordPoolBuilder.h"
 #include "../include/CustomChordPoolBuilder.h"
 #include "../include/CustomChordBuilder.h"
 #include "../include/ChordBuilder.h"
@@ -35,7 +35,7 @@ void Describer::registerDefaults()
   ChannelIngredientBuilder::registerWith(*this);
   TonicIngredientBuilder::registerWith(*this);
   BPMTempoIngredientBuilder::registerWith(*this);
-  RandomTriadChordPoolBuilder::registerWith(*this);
+  TriadChordPoolBuilder::registerWith(*this);
   CustomChordPoolBuilder::registerWith(*this);
   CustomChordBuilder::registerWith(*this);
   ChordBuilder::registerWith(*this);
