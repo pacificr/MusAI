@@ -19,7 +19,7 @@ EM_OBJECTS := $(filter-out js/Driver.o, $(EM_OBJECTS))
 cpp: $(EXEC)
 js: $(EM_EXEC)
 valgrind: $(EXEC)
-	valgrind --leak-check=full --show-leak-kinds=all -v ./$(EXEC) test/basic.json
+	valgrind --leak-check=full --show-leak-kinds=all -v ./$(EXEC) test/basic.json -l 30
 
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)

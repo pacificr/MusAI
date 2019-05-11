@@ -4,8 +4,7 @@
 
 std::string MIDISignal::getRaw() const
 {
-    std::string output = std::to_string(mTime);
-    output += " ";
+    std::string output = "";
 
     if (mNoteOn)
         output += "1001";

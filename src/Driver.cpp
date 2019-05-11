@@ -8,13 +8,18 @@
 #include <iostream>
 #include <memory>
 #include <fstream>
+#include <chrono>
 
 int main(int argc, char* argv[])
 {
   Logger& logger = Logger::instance();
+  int limit = -1;
   for (int i = 2; i < argc; ++i)
   {
-    logger.enable(argv[i]);
+    if (strcmp(argv[i],"-l") == 0)
+      limit = atoi(argv[++i]);
+    else
+      logger.enable(argv[i]);
   } 
 
   std::ifstream testJson(argv[1]);
@@ -31,14 +36,30 @@ int main(int argc, char* argv[])
 
   std::shared_ptr<IGenerator> generator = theme->getGenerator();
 
-  for (int i = 0; i < 1; i++)
-  {
-    MIDIStream stream = generator->getNext(i * 20 + 20);
+  using namespace std::chrono;
+  milliseconds start = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+  milliseconds current = start;
 
-    while (stream.hasNext())
+  int t = 20;
+  MIDIStream stream = generator->getNext(t);
+  MIDISignal signal = stream.getNext();
+
+  while(limit == -1 || limit > (current.count() - start.count()) / 1000)
+  {
+    current = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    if ((current.count() - start.count()) / 1000 >= signal.mTime)
     {
-      logger.log(LOC, stream.getNext().getNoteName());
-      stream.getNext();
+      std::cout << signal.getRaw() << std::endl;
+      if (stream.hasNext())
+      {
+        signal = stream.getNext();
+      }
+      else
+      {
+        t += 20;
+        stream = generator->getNext(t);
+        signal = stream.getNext();
+      }
     }
   }
 
